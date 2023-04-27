@@ -42,7 +42,7 @@ Create the default config file `~/taketok/config/default.config.json`
 * Create a Google Sheets spreadsheet
 * Copy the spreadsheet ID from the Google Sheets URL (`https://docs.google.com/spreadsheets/d/<spreadsheet_id>/`) and
   update `googleSheet.id` in `<configName>.config.json` accordingly
-* TODO: Set up spreadsheet according to layout, set video data tab name in config
+* **TODO:** Set up spreadsheet according to layout, set video data tab name in config
 
 ### Python
 * Install Python 3.10
@@ -51,23 +51,6 @@ Create the default config file `~/taketok/config/default.config.json`
 * `pip install -r requirements.txt`
 * `python -m playwright install`
 * `choco install ffmpeg` (Win) | `brew install ffmpeg` (MacOS) | `sudo apt install ffmpeg` (Debian)
-
-### TODO
-* Any formulas that need to be entered in a first row, to be automatically copied down
-* Any source URLs that are needed as a seed
-* Anything dynamic, such as a hashtag list used for crawling, etc.
-
-## Next Steps
-* Append or integrate transcription step into current data pipeline (transcript should be independently retryable)
-* Ensure tmp dir exists
-* Integrate content summarization
-
-## Future Ideas
-* Have a rating system for useful and not useful videos, use a simple ML model to learn best hashtags / users
-* Google Sheets seeder: set up a blank Google sheet with the right schema
-* Handle too many requests for Google Sheets
-* Consider moving away from Google Sheets to Excel
-* Dockerize
 
 ## Notes
 * pip setup instructions for whisper didn't work, pip install command had to be `pip install git+https://github.com/openai/whisper.git`
