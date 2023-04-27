@@ -1,7 +1,7 @@
 import moviepy.editor
 import whisper
 
-from src.util.path_utils import taketok_home
+from src.util.path_utils import tmp_dir
 from src.util.config import Config
 
 
@@ -10,7 +10,7 @@ class VideoTranscriber:
     def __init__(self, config: Config):
         self._video_output_dir = config.video_output_dir
         self._model = config.whisper_model
-        self._tmp_audio_file = str(taketok_home() / 'tmp.mp3')
+        self._tmp_audio_file = str(tmp_dir() / 'tmp.mp3')
 
     def _extract_audio_tmp_file(self, video_id):
         print('Extracting audio from video %s' % video_id)

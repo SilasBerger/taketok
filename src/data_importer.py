@@ -2,6 +2,7 @@ import math
 
 from src.spreadsheet.spreadsheet import Spreadsheet, TableRow
 from src.tiktok.tiktok import resolve_video_id, tiktok_download
+from src.transcribe.transcribe import VideoTranscriber
 from src.util.config import Config
 
 
@@ -11,6 +12,7 @@ class DataImporter:
         self._sheet = spreadsheet
         self._video_out_dir = config.video_output_dir
         self._import_batch_size = config.import_batch_size
+        self._transcriber = VideoTranscriber(config)
 
     def _save_video(self, video_bytes, video_id):
         filename = self._video_out_dir / ('%s.mp4' % video_id)
@@ -41,11 +43,17 @@ class DataImporter:
             author['signature']
         ]
 
-    def _save_video_and_fetch_meta_data(self, video_url):
-        video_id = resolve_video_id(video_url)
+    def _save_video_and_fetch_meta_data(self, video_id):
         tiktok_result = tiktok_download(video_id)
         self._save_video(tiktok_result.bytes, video_id)
         return DataImporter._map_meta_data(tiktok_result.info)
+
+    def _transcribe_video(self, video_id):
+        try:
+            return self._transcriber.transcribe(video_id)
+        except Exception as e:
+            print('Failed to transcribe video %s:' % video_id)
+            print(e)
 
     def _split_into_import_batches(self, rows: list[TableRow]):
         num_rows = len(rows)
@@ -59,16 +67,20 @@ class DataImporter:
         return batches
 
     def _import_batch(self, batch):
+        # TODO: Magic constant for status / magic order.
         rows_to_update = []
         for index, row in enumerate(batch):
+            video_url = row.data[0]
+            print('Importing line %s (URL: %s)' % (index + 1, video_url))
             try:
-                print('Importing line %s' % (index + 1))
-                meta_data = self._save_video_and_fetch_meta_data(row.data[0])
-                # TODO: Magic constant for status / magic order.
-                rows_to_update.append(TableRow(row.index, ['OK', ''] + meta_data))
+                video_id = resolve_video_id(row.data[0])
+                meta_data = self._save_video_and_fetch_meta_data(video_id)
+                transcript = self._transcribe_video(video_id)
+                rows_to_update.append(TableRow(row.index, ['OK'] + meta_data + [transcript]))
             except Exception as e:
-                # TODO: Magic status / magic order.
-                rows_to_update.append(TableRow(row.index, ['FAILED', str(e)]))
+                print('Failed to import video from URL %s:' % video_url)
+                print(e)
+                rows_to_update.append(TableRow(row.index, ['FAILED']))
 
         print('Fetched all data, updating spreadsheet')
         self._sheet.save_imported_video_data(rows_to_update)
