@@ -1,4 +1,6 @@
-# README
+# TakeTok
+A TikTok content distillery.
+
 ## Setup
 ### Configuration
 * The `taketok` directory is located at `%USERHOME%/taketok` / `~/taketok`
