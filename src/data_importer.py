@@ -10,7 +10,7 @@ class DataImporter:
     def __init__(self, spreadsheet: Spreadsheet, config: Config):
         self._sheet = spreadsheet
         self._video_out_dir = config.video_output_dir
-        self._import_chunk_size = config.import_chunk_size
+        self._import_batch_size = config.import_batch_size
 
     def _save_video(self, video_bytes, video_id):
         filename = self._video_out_dir / ('%s.mp4' % video_id)
@@ -47,20 +47,20 @@ class DataImporter:
         self._save_video(tiktok_result.bytes, video_id)
         return DataImporter._map_meta_data(tiktok_result.info)
 
-    def _split_into_import_chunks(self, rows: list[TableRow]):
+    def _split_into_import_batches(self, rows: list[TableRow]):
         num_rows = len(rows)
-        num_chunks = math.ceil(num_rows / self._import_chunk_size)
-        print('Found %s rows to import, importing in %s chunks of %s' % (num_rows, num_chunks, self._import_chunk_size))
-        chunks = []
-        for chunk_nr in range(num_chunks):
-            start_index = chunk_nr * self._import_chunk_size
-            end_index = min(start_index + self._import_chunk_size, num_rows)
-            chunks.append(rows[start_index:end_index])
-        return chunks
+        num_batches = math.ceil(num_rows / self._import_batch_size)
+        print('Found %s rows to import, importing in %s batches of %s' % (num_rows, num_batches, self._import_batch_size))
+        batches = []
+        for batch_nr in range(num_batches):
+            start_index = batch_nr * self._import_batch_size
+            end_index = min(start_index + self._import_batch_size, num_rows)
+            batches.append(rows[start_index:end_index])
+        return batches
 
-    def _import_chunk(self, chunk):
+    def _import_batch(self, batch):
         rows_to_update = []
-        for index, row in enumerate(chunk):
+        for index, row in enumerate(batch):
             try:
                 print('Importing line %s' % (index + 1))
                 meta_data = self._save_video_and_fetch_meta_data(row.data[0])
@@ -76,11 +76,11 @@ class DataImporter:
     def import_all_new_urls(self):
         # TODO: Magic numbers (URL / status col indices).
         new_rows = [row for row in self._sheet.read_url_and_status() if not row.data[1]]
-        chunks = self._split_into_import_chunks(new_rows)
-        for index, chunk in enumerate(chunks):
-            print('\nImporting chunk %s/%s' % (index + 1, len(chunks)))
+        batches = self._split_into_import_batches(new_rows)
+        for index, batch in enumerate(batches):
+            print('\nImporting batch %s/%s' % (index + 1, len(batches)))
             try:
-                self._import_chunk(chunk)
+                self._import_batch(batch)
             except Exception as e:
                 print('Chunk failed:')
                 print(e)

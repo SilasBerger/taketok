@@ -20,6 +20,6 @@ class Config:
     def __init__(self, name, config):
         self.name = name
         self.video_output_dir = as_path(config['videoOutputDir'])
-        self.import_chunk_size = config['importChunkSize']
+        self.import_batch_size = config['importBatchSize']
         self.google_sheet = GoogleSheetConfig(config['googleSheet'])
         self.whisper_model = config['whisperModel']
