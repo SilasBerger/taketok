@@ -1,15 +1,16 @@
 # README
 ## Setup
 ### Configuration
-* The `taketok_home` directory is `%USERHOME%/.taketok` / `~/.taketok`
-* Each config file is prefixed with `<configName>.` to support multiple configs. The run config can be specified as first argument, e.g. `taketok.py myConfig`
+* The `taketok` directory is located at `%USERHOME%/taketok` / `~/taketok`
+* Each config and credential file is prefixed with `<configName>.` to support multiple configs. The run config can be
+  specified as  first argument, e.g. `taketok.py myConfig`
 * The default config is named `default`
 
-Create the default config file `default.config.json`
+Create the default config file `~/taketok/config/default.config.json`
 ```json
 {
   "videoOutputDir": "C:\\Users\\me\\path\\to\\taketok_out_dir",
-  "importChunkSize": 5,
+  "importBatchSize": 5,
   "googleSheet": {
     "id": "Some Google Sheets sheet ID",
     "videoDataTab": "tiktokData"
@@ -18,26 +19,30 @@ Create the default config file `default.config.json`
 ```
 
 **Fields:**
-* `videoOutputDir`: 
-* `importChunkSize`: 
-* `whisperModel`: `tiny` | `base` | `small` | `medium` | `large`
-* `googleSheet.id`: 
-* `googleSheet.videoDataTab`:
+* `videoOutputDir`: Destination directory for downloaded videos
+* `importBatchSize`: Number of video to be processed as single batch 
+* `whisperModel`: Whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
+* `googleSheet.id`: ID of the Google Sheet to be used
+* `googleSheet.videoDataTab`: Name of the video data tab in that sheet
 
 ### Google Cloud Project
 * Create a new Google Cloud project: https://console.cloud.google.com/projectcreate
 * Activate Google Sheets API in that project: https://console.cloud.google.com/flows/enableapi?apiid=sheets.googleapis.com
 * Create OAuth credentials for that project: https://console.cloud.google.com/apis/credentials
   * Click Create Credentials > OAuth client ID
-    * You may need to create a consent screen first. Just create a public consent screen, use default values everywhere, and add yourself as a test user.
+    * You may need to create a consent screen first. Just create a public consent screen, use default values everywhere,
+      and add yourself as a test user.
   * Click Application type > Desktop app
   * In the Name field, type a name for the credential (e.g. `taketok`)
   * Confirm everything
-  * Save the downloaded JSON file as `default.gcp-credentials.json` (or any config name other than `default`) in `taketok_home`
+  * Save the downloaded JSON file as `default.gcp-credentials.json` (or any config name other than `default`) in
+    `~/taketok/config`
 
 ### Google Sheets Spreadsheet
-* Create a Google Sheets spreadsheet with all tabs and columns required by `conf.json`, update values in `config.json` as needed
-* Copy the spreadsheet ID from the Google Sheets URL (`https://docs.google.com/spreadsheets/d/<spreadsheet_id>/`) and update `googleSheet.id` in `conf.json` accordingly
+* Create a Google Sheets spreadsheet
+* Copy the spreadsheet ID from the Google Sheets URL (`https://docs.google.com/spreadsheets/d/<spreadsheet_id>/`) and
+  update `googleSheet.id` in `<configName>.config.json` accordingly
+* TODO: Set up spreadsheet according to layout, set video data tab name in config
 
 ### Python
 * Install Python 3.10
@@ -52,12 +57,10 @@ Create the default config file `default.config.json`
 * Any source URLs that are needed as a seed
 * Anything dynamic, such as a hashtag list used for crawling, etc.
 
-## Troubleshooting
-* When changing `scopes` in `conf.json`, delete the automatically generated `token.json` file
-
 ## Next Steps
 * Append or integrate transcription step into current data pipeline (transcript should be independently retryable)
-* Integrate OpenAI / GPT API
+* Ensure tmp dir exists
+* Integrate content summarization
 
 ## Future Ideas
 * Have a rating system for useful and not useful videos, use a simple ML model to learn best hashtags / users
