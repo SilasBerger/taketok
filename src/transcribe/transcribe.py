@@ -1,3 +1,6 @@
+import os
+import pathlib
+
 import moviepy.editor
 import whisper
 
@@ -24,8 +27,13 @@ class VideoTranscriber:
         return model.transcribe(self._tmp_audio_file)['text'].strip()
 
     def _remove_audio_tmp_file(self):
-        # TODO: Implement.
-        pass
+        file_path = pathlib.Path(self._tmp_audio_file)
+        if not file_path.exists():
+            return
+        try:
+            os.remove(file_path)
+        except Exception:
+            print('Unable to delete tmp audio file')
 
     def transcribe(self, video_id):
         self._extract_audio_tmp_file(video_id)
