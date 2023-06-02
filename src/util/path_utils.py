@@ -14,7 +14,10 @@ def config_dir():
 
 
 def tmp_dir():
-    return taketok_home() / 'tmp'
+    tmp_dir_path = taketok_home() / 'tmp'
+    if not tmp_dir_path.exists():
+        tmp_dir_path.mkdir()
+    return tmp_dir_path
 
 
 def config_file(config_name):
