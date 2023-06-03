@@ -2,7 +2,7 @@ from googleapiclient.discovery import build
 from gcp_commons.auth import GcpAuthHandler
 
 from src.util.config import Config
-from src.util.path_utils import gcp_token_file
+from src.util.path_utils import gcp_token_file, gcp_credentials_file
 
 
 def cell(col, row):
@@ -19,7 +19,11 @@ class GoogleSheet:
 
     def __init__(self, config: Config):
         self._spreadsheet_id = config.google_sheet.id
-        self._auth = GcpAuthHandler(gcp_token_file(config.name), gcp_token_file(config.name))
+        self._auth = GcpAuthHandler(
+            gcp_credentials_file(config.name),
+            gcp_token_file(config.name),
+            ['https://www.googleapis.com/auth/spreadsheets']
+        )
 
     def _connect_to_sheet(self):
         service = build('sheets', 'v4', credentials=self._auth.load_credentials())
