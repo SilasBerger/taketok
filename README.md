@@ -3,8 +3,8 @@ A TikTok content distillery.
 
 ## Setup Instructions
 **Note:** Whenever we mention the _taketok home_ or `~/taketok` directory, we refer to a directory called `taketok`,
-located at the root of the user home, i.e. `~/taketok` (UNIX-like) or `%USERHOME%/taketok`. You will have to create
-this directory yourself, as part of the setup process.
+located at the root of the user home, i.e. `~/taketok` (UNIX-like) or `%USERHOME%/taketok` (Windows). You will have to
+create  this directory yourself, as part of the setup process.
 
 ### Step 1: Install the prerequisites
 * **Python 3.10** - e.g. `brew install python@3.10` (macOS)
@@ -32,7 +32,7 @@ Create the default config file `~/taketok/config/default.config.json` as follows
 ```
 
 **Here's what these fields mean:**
-* `videoOutputDir`: Where `taketok` put all downloaded videos
+* `videoOutputDir`: Where `taketok` puts all downloaded videos
 * `importBatchSize`: How many videos should be processed as a batch before saving to Google Sheets
 * `whisperModel`: The whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
 * `googleSheet.id`: ID of the Google Sheet to be used (you can leave this empty until step 5)
