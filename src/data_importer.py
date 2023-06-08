@@ -1,17 +1,16 @@
-import math
+import datetime
 
-from src.spreadsheet.spreadsheet import Spreadsheet, TableRow
-from src.tiktok.tiktok import resolve_video_id, tiktok_download
+from src.db.dao import Dao
+from src.tiktok.tiktok import resolve_video_id, tiktok_download, resolve_video_url_if_shortened
 from src.transcribe.transcribe import VideoTranscriber
 from src.util.config import Config
 
 
 class DataImporter:
 
-    def __init__(self, spreadsheet: Spreadsheet, config: Config):
-        self._sheet = spreadsheet
+    def __init__(self, dao: Dao, config: Config):
+        self._dao = dao
         self._video_out_dir = config.video_output_dir
-        self._import_batch_size = config.import_batch_size
         self._transcriber = VideoTranscriber(config)
 
     def _save_video(self, video_bytes, video_id):
@@ -21,78 +20,64 @@ class DataImporter:
 
     @staticmethod
     def _extract_hashtags(info):
-        return ",".join([hashtag['hashtagName'] for hashtag in info['textExtra']]) if 'textExtra' in info else ''
+        return [hashtag['hashtagName'] for hashtag in info['textExtra']] if 'textExtra' in info else []
 
     @staticmethod
-    def _extract_suggested_words(info):
-        return ",".join(info['suggestedWords']) if 'suggestedWords' in info else ''
+    def _extract_challenges(info):
+        return [{
+            "id": challenge["id"],
+            "title": challenge["title"],
+            "description": challenge["desc"],
+        } for challenge in info["challenges"]]
 
-    @staticmethod
-    def _map_meta_data(info):
-        info = info['itemInfo']['itemStruct']
+    def _import_video(self, source_url: str):
+        current_date_iso = datetime.datetime.now().isoformat()
+        resolved_url = resolve_video_url_if_shortened(source_url)
+        video_id = resolve_video_id(resolved_url)
+
+        tiktok_result = tiktok_download(video_id)
+        # self._save_video(tiktok_result.bytes, video_id)
+        info = tiktok_result.info['itemInfo']['itemStruct']
         author = info['author']
 
-        return [
-            info['id'],
-            info['desc'],
-            DataImporter._extract_hashtags(info),
-            DataImporter._extract_suggested_words(info),
+        author_rowid = self._dao.save_author_if_not_exists(author['id'])
+        self._dao.update_author_info_if_changed(
+            author_rowid,
             author['id'],
             author['uniqueId'],
             author['nickname'],
-            author['signature']
-        ]
+            author['signature'],
+            current_date_iso,
+        )
 
-    def _save_video_and_fetch_meta_data(self, video_id):
-        tiktok_result = tiktok_download(video_id)
-        self._save_video(tiktok_result.bytes, video_id)
-        return DataImporter._map_meta_data(tiktok_result.info)
+        video_rowid = self._dao.save_video_metadata(
+            source_url,
+            resolved_url,
+            'OK',
+            video_id,
+            current_date_iso,
+            info['desc'],
+            datetime.datetime.utcfromtimestamp(info['createTime']).isoformat(),
+            author_rowid
+        )
 
-    def _transcribe_video(self, video_id):
-        try:
-            return self._transcriber.transcribe(video_id)
-        except Exception as e:
-            print('Failed to transcribe video %s:' % video_id)
-            print(e)
+        self._dao.insert_hashtags(video_rowid, self._extract_hashtags(info))
+        self._dao.insert_challenges(video_rowid, self._extract_challenges(info))
 
-    def _split_into_import_batches(self, rows: list[TableRow]):
-        num_rows = len(rows)
-        num_batches = math.ceil(num_rows / self._import_batch_size)
-        print('Found %s rows to import, importing in %s batches of %s' % (num_rows, num_batches, self._import_batch_size))
-        batches = []
-        for batch_nr in range(num_batches):
-            start_index = batch_nr * self._import_batch_size
-            end_index = min(start_index + self._import_batch_size, num_rows)
-            batches.append(rows[start_index:end_index])
-        return batches
+        transcript = self._transcriber.transcribe(video_id)
+        self._dao.insert_transcript(video_rowid, transcript)
 
-    def _import_batch(self, batch):
-        # TODO: Magic constant for status / magic order.
-        rows_to_update = []
-        for index, row in enumerate(batch):
-            video_url = row.data[0]
-            print('Importing line %s (URL: %s)' % (index + 1, video_url))
+    def _import_all(self, new_links: [str]):
+        for index, source_url in enumerate(new_links):
+            print('Importing link %s (URL: %s)' % (index + 1, source_url))
             try:
-                video_id = resolve_video_id(row.data[0])
-                meta_data = self._save_video_and_fetch_meta_data(video_id)
-                transcript = self._transcribe_video(video_id)
-                rows_to_update.append(TableRow(row.index, ['OK'] + meta_data + [transcript]))
+                self._import_video(source_url)
             except Exception as e:
-                print('Failed to import video from URL %s:' % video_url)
+                raise e
+                self._dao.mark_source_url_as_failed(source_url)
+                print('Failed to import video with source URL %s:' % source_url)
                 print(e)
-                rows_to_update.append(TableRow(row.index, ['FAILED']))
 
-        print('Fetched all data, updating spreadsheet')
-        self._sheet.save_imported_video_data(rows_to_update)
-
-    def import_all_new_urls(self):
-        # TODO: Magic numbers (URL / status col indices).
-        new_rows = [row for row in self._sheet.read_url_and_status() if not row.data[1]]
-        batches = self._split_into_import_batches(new_rows)
-        for index, batch in enumerate(batches):
-            print('\nImporting batch %s/%s' % (index + 1, len(batches)))
-            try:
-                self._import_batch(batch)
-            except Exception as e:
-                print('Chunk failed:')
-                print(e)
+    def import_all_new_links(self):
+        new_links = self._dao.get_links_without_download_status()
+        self._import_all(new_links)
