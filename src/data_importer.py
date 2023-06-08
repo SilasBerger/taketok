@@ -36,7 +36,7 @@ class DataImporter:
         video_id = resolve_video_id(resolved_url)
 
         tiktok_result = tiktok_download(video_id)
-        # self._save_video(tiktok_result.bytes, video_id)
+        # self._save_video(tiktok_result.bytes, video_id) TODO: Activate
         info = tiktok_result.info['itemInfo']['itemStruct']
         author = info['author']
 
@@ -50,20 +50,20 @@ class DataImporter:
             current_date_iso,
         )
 
-        video_rowid = self._dao.save_video_metadata(
-            source_url,
-            resolved_url,
-            'OK',
-            video_id,
-            current_date_iso,
-            info['desc'],
-            datetime.datetime.utcfromtimestamp(info['createTime']).isoformat(),
-            author_rowid
-        )
+        video_rowid = self._dao.save_video_metadata(source_url, {
+            "resolved_url": resolved_url,
+            "download_status": 'OK',
+            "video_id": video_id,
+            "download_date_iso": current_date_iso,
+            "description": info['desc'],
+            "upload_date_iso": datetime.datetime.utcfromtimestamp(info['createTime']).isoformat(),
+            "author_rowid": author_rowid
+        })
 
         self._dao.insert_hashtags(video_rowid, self._extract_hashtags(info))
         self._dao.insert_challenges(video_rowid, self._extract_challenges(info))
 
+        # TODO: Factor out into separate step, don't mark as failed.
         transcript = self._transcriber.transcribe(video_id)
         self._dao.insert_transcript(video_rowid, transcript)
 
@@ -73,7 +73,6 @@ class DataImporter:
             try:
                 self._import_video(source_url)
             except Exception as e:
-                raise e
                 self._dao.mark_source_url_as_failed(source_url)
                 print('Failed to import video with source URL %s:' % source_url)
                 print(e)
