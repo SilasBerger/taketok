@@ -8,18 +8,9 @@ def read_config(config_name):
         return Config(config_name, json.load(fp))
 
 
-class GoogleSheetConfig:
-
-    def __init__(self, config):
-        self.id = config['id']
-        self.video_data_tab = config['videoDataTab']
-
-
 class Config:
 
     def __init__(self, name, config):
         self.name = name
         self.video_output_dir = as_path(config['videoOutputDir'])
-        self.import_batch_size = config['importBatchSize']
-        self.google_sheet = GoogleSheetConfig(config['googleSheet'])
         self.whisper_model = config['whisperModel']

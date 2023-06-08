@@ -1,6 +1,4 @@
-google-api-python-client
 git+https://github.com/openai/whisper.git
-git+https://github.com/SilasBerger/gcp-commons.git@v0.1.0
 moviepy
 playwright
 TikTokApi
