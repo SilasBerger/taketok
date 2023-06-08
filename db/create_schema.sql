@@ -5,6 +5,11 @@ drop table if exists hashtag;
 drop table if exists video;
 drop table if exists author_data;
 drop table if exists author;
+drop table if exists taketok_schema;
+
+create table taketok_schema (
+    schema_version unique not null
+);
 
 create table author (
     author_id text unique not null
@@ -52,3 +57,5 @@ create table video_challenge_rel (
     challenge_rowid references challenge(ROWID) on delete cascade,
     primary key (video_rowid, challenge_rowid)
 );
+
+insert into taketok_schema (schema_version) values ('1.0');

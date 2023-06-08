@@ -14,7 +14,7 @@ def get_config_name():
 def main():
     config_name = get_config_name()
     config = read_config(config_name)
-    database = Database.connect(sqlite_file(config.name))
+    database = Database.connect(sqlite_file(config.name), create_if_not_exists=True)
     dao = Dao(database)
     video_importer = DataImporter(dao, config)
     video_importer.import_all_new_links()

@@ -28,17 +28,13 @@ def config_file(config_name):
     return config_dir() / ('%s.config.json' % config_name)
 
 
-def gcp_credentials_file(config_name):
-    return config_dir() / ('%s.gcp-credentials.json' % config_name)
-
-
-def gcp_token_file(config_name):
-    return tmp_dir() / ('%s.gcp-token.json' % config_name)
-
-
 def _sqlite_db_dir():
     return _ensure_dir(taketok_home() / 'data')
 
 
 def sqlite_file(config_name):
     return _sqlite_db_dir() / ('%s.sqlite' % config_name)
+
+
+def db_scripts_dir():
+    return Path().resolve().parent / "db"
