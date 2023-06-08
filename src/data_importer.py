@@ -28,7 +28,15 @@ class DataImporter:
             "id": challenge["id"],
             "title": challenge["title"],
             "description": challenge["desc"],
-        } for challenge in info["challenges"]]
+        } for challenge in info["challenges"]] if "challenges" in info else []
+
+    def _import_transcript(self, video_id, video_rowid):
+        try:
+            transcript = self._transcriber.transcribe(video_id)
+            self._dao.insert_transcript(video_rowid, transcript)
+        except Exception as e:
+            print("Failed to transcribe video with ID %s:" % video_id)
+            print(e)
 
     def _import_video(self, source_url: str):
         current_date_iso = datetime.datetime.now().isoformat()
@@ -36,7 +44,7 @@ class DataImporter:
         video_id = resolve_video_id(resolved_url)
 
         tiktok_result = tiktok_download(video_id)
-        # self._save_video(tiktok_result.bytes, video_id) TODO: Activate
+        self._save_video(tiktok_result.bytes, video_id)
         info = tiktok_result.info['itemInfo']['itemStruct']
         author = info['author']
 
@@ -62,10 +70,7 @@ class DataImporter:
 
         self._dao.insert_hashtags(video_rowid, self._extract_hashtags(info))
         self._dao.insert_challenges(video_rowid, self._extract_challenges(info))
-
-        # TODO: Factor out into separate step, don't mark as failed.
-        transcript = self._transcriber.transcribe(video_id)
-        self._dao.insert_transcript(video_rowid, transcript)
+        self._import_transcript(video_id, video_rowid)
 
     def _import_all(self, new_links: [str]):
         for index, source_url in enumerate(new_links):
