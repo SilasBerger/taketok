@@ -39,6 +39,7 @@ class DataImporter:
             print(e)
 
     def _import_video(self, source_url: str):
+        # TODO: Aborting import can leave data in incomplete state: single transaction, or state markers.
         current_date_iso = datetime.datetime.now().isoformat()
         resolved_url = resolve_video_url_if_shortened(source_url)
         video_id = resolve_video_id(resolved_url)
