@@ -71,11 +71,11 @@ class DataImporter:
 
         self._dao.insert_hashtags(video_rowid, self._extract_hashtags(info))
         self._dao.insert_challenges(video_rowid, self._extract_challenges(info))
-        self._import_transcript(video_id, video_rowid)
+        self._import_transcript(video_id, video_rowid)  # TODO: Still fails entry if this fails.
 
     def _import_all(self, new_links: [str]):
         for index, source_url in enumerate(new_links):
-            print('Importing link %s (URL: %s)' % (index + 1, source_url))
+            print('\nImporting link %s/%s (URL: %s)' % (index + 1, len(new_links), source_url))
             try:
                 self._import_video(source_url)
             except Exception as e:
