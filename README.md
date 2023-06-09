@@ -6,10 +6,6 @@ A TikTok content distillery.
 located at the root of the user home, i.e. `~/taketok` (UNIX-like) or `%USERHOME%/taketok` (Windows). You will have to
 create  this directory yourself, as part of the setup process.
 
-**Note:** There is no support yet for saving TikTok links in the database. Until implemented, use the script
-`db/insert_demo_data.sql`. The SQLite database file for the corresponding config is automatically created in the
-_taketok home_ during the first run using that configuration.
-
 ### Step 1: Install the prerequisites
 * **Python 3.10** - e.g. `brew install python@3.10` (macOS)
 * **ffmpeg** - `brew install ffmpeg` (MacOS) | `choco install ffmpeg` (Win) | `sudo apt install ffmpeg` (Debian)
@@ -33,6 +29,17 @@ Create the default config file `~/taketok/config/default.config.json` as follows
 **Here's what these fields mean:**
 * `videoOutputDir`: Where `taketok` puts all downloaded videos
 * `whisperModel`: The whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
+
+### Step 3.1: Import source links
+Create a file `<taketok_home>/source-links.txt`, to which you can add any links to be imported into the database,
+one link per line. This is a temporary solution for getting source links into the DB until there is a UI.
+
+With the virtual env activated (`source ./venv/bin/activate`), run
+
+`python insert_source_links_from_file.py`
+
+from the `dev` directory, to go through this file and insert all links not yet present in the database. This is
+hard-coded to the `default` configuration for now.
 
 ### Step 4: Run it!
 _With the virtual env activated (`source ./venv/bin/activate`)..._
