@@ -8,7 +8,7 @@ def main():
     with open(source_links_file_path) as links_file:
         lines = links_file.readlines()
         for line in lines:
-            database.write("insert or ignore into video (source_url) values (?)", (line.strip(),))
+            database.write_and_commit("insert or ignore into video (source_url) values (?)", (line.strip(),))
 
 
 if __name__ == "__main__":

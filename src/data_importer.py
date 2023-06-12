@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 from src.db.dao import Dao
 from src.tiktok.tiktok import resolve_video_id, tiktok_download, resolve_video_url_if_shortened
@@ -38,8 +39,7 @@ class DataImporter:
             print("Failed to transcribe video with ID %s:" % video_id)
             print(e)
 
-    def _import_video(self, source_url: str):
-        # TODO: Aborting import can leave data in incomplete state: single transaction, or state markers.
+    def _import_video_metadata(self, source_url: str):
         current_date_iso = datetime.datetime.now().isoformat()
         resolved_url = resolve_video_url_if_shortened(source_url)
         video_id = resolve_video_id(resolved_url)
@@ -71,17 +71,26 @@ class DataImporter:
 
         self._dao.insert_hashtags(video_rowid, self._extract_hashtags(info))
         self._dao.insert_challenges(video_rowid, self._extract_challenges(info))
-        self._import_transcript(video_id, video_rowid)  # TODO: Still fails entry if this fails.
+        self._dao.commit()
+
+        return video_id, video_rowid
+
+    def _import_video(self, source_url: str):
+        try:
+            (video_id, video_rowid) = self._import_video_metadata(source_url)
+        except Exception:
+            self._dao.rollback()
+            self._dao.mark_source_url_as_failed(source_url)
+            print('Failed to import video with source URL %s' % source_url)
+            traceback.print_exc()
+            return
+
+        self._import_transcript(video_id, video_rowid)
 
     def _import_all(self, new_links: [str]):
         for index, source_url in enumerate(new_links):
             print('\nImporting link %s/%s (URL: %s)' % (index + 1, len(new_links), source_url))
-            try:
-                self._import_video(source_url)
-            except Exception as e:
-                self._dao.mark_source_url_as_failed(source_url)
-                print('Failed to import video with source URL %s:' % source_url)
-                print(e)
+            self._import_video(source_url)
 
     def import_all_new_links(self):
         new_links = self._dao.get_links_without_download_status()

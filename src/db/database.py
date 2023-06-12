@@ -51,7 +51,17 @@ class Database:
         self._cursor.execute(statement, bindings)
         return self._cursor.fetchall()
 
-    def write(self, statement, bindings=()):
+    def write_and_commit(self, statement, bindings=()):
         self._cursor.execute(statement, bindings)
         self._connection.commit()
         return self._cursor.lastrowid
+
+    def write_transactional(self, statement, bindings=()):
+        self._cursor.execute(statement, bindings)
+        return self._cursor.lastrowid
+
+    def commit(self):
+        self._connection.commit()
+
+    def rollback(self):
+        self._connection.rollback()
