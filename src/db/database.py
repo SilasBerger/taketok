@@ -1,4 +1,3 @@
-import os
 import sqlite3
 from pathlib import Path
 
@@ -51,12 +50,7 @@ class Database:
         self._cursor.execute(statement, bindings)
         return self._cursor.fetchall()
 
-    def write_and_commit(self, statement, bindings=()):
-        self._cursor.execute(statement, bindings)
-        self._connection.commit()
-        return self._cursor.lastrowid
-
-    def write_transactional(self, statement, bindings=()):
+    def execute(self, statement, bindings=()):
         self._cursor.execute(statement, bindings)
         return self._cursor.lastrowid
 

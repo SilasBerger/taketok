@@ -1,6 +1,5 @@
 import sys
 
-from src.db.dao import Dao
 from src.data_importer import DataImporter
 from src.db.database import Database
 from src.util.config import read_config
@@ -15,8 +14,7 @@ def main():
     config_name = get_config_name()
     config = read_config(config_name)
     database = Database.connect(sqlite_file(config.name), create_if_not_exists=True)
-    dao = Dao(database)
-    video_importer = DataImporter(dao, config)
+    video_importer = DataImporter(database, config)
     video_importer.import_all_new_links()
 
 
