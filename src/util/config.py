@@ -12,5 +12,5 @@ class Config:
 
     def __init__(self, name, config):
         self.name = name
-        self.video_output_dir = as_path(config['videoOutputDir'])
+        self.video_output_dir = as_path(config['videoOutputDir'])  # TODO: Maybe create if not exists?
         self.whisper_model = config['whisperModel']
