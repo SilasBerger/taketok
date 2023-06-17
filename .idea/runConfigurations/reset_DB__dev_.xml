@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Reset DEV DB" type="DatabaseScript">
+  <configuration default="false" name="reset DB [dev]" type="DatabaseScript">
     <script-file value="$PROJECT_DIR$/db/create_schema.sql" />
     <script-file value="$PROJECT_DIR$/dev/insert_demo_data.sql" />
     <script-mode>FILE</script-mode>
