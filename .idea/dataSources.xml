@@ -7,6 +7,9 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$USER_HOME$/taketok/data/default.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="foreign_keys" value="true" />
+      </driver-properties>
     </data-source>
     <data-source source="LOCAL" name="dev.sqlite" uuid="bfd26427-f0c3-4d01-8349-9859772f83aa">
       <driver-ref>sqlite.xerial</driver-ref>
@@ -14,6 +17,9 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$USER_HOME$/taketok/data/dev.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="foreign_keys" value="true" />
+      </driver-properties>
     </data-source>
   </component>
 </project>
