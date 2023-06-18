@@ -19,7 +19,7 @@ class VideoTranscriber:
         print('Extracting audio from video %s' % video_id)
         video_file = str(self._video_output_dir / ('%s.mp4' % video_id))
         video = moviepy.editor.VideoFileClip(video_file)
-        video.audio.write_audiofile(self._tmp_audio_file, verbose=False)
+        video.audio.write_audiofile(self._tmp_audio_file, verbose=False, logger=None)
 
     def _transcribe_audio(self) -> str:
         print('Transcribing video')

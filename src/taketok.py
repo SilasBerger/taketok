@@ -1,9 +1,9 @@
 import sys
 
-from src.spreadsheet.spreadsheet import Spreadsheet
-from src.spreadsheet.google_sheets import GoogleSheet
 from src.data_importer import DataImporter
+from src.db.database import Database
 from src.util.config import read_config
+from src.util.path_utils import sqlite_file
 
 
 def get_config_name():
@@ -13,10 +13,9 @@ def get_config_name():
 def main():
     config_name = get_config_name()
     config = read_config(config_name)
-    google_sheet = GoogleSheet(config)
-    spreadsheet = Spreadsheet(google_sheet, config)
-    video_importer = DataImporter(spreadsheet, config)
-    video_importer.import_all_new_urls()
+    database = Database.connect(sqlite_file(config.name), create_if_not_exists=True)
+    video_importer = DataImporter(database, config)
+    video_importer.import_all_new_links()
 
 
 if __name__ == '__main__':

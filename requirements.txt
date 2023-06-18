@@ -5,9 +5,7 @@ decorator==4.4.2
 ffmpeg-python==0.2.0
 filelock==3.12.0
 future==0.18.3
-gcp-commons @ git+https://github.com/SilasBerger/gcp-commons.git@78a6849308c3f38b252b820bc58b21e5508894ad
 google-api-core==2.11.0
-google-api-python-client==2.88.0
 google-auth==2.19.1
 google-auth-httplib2==0.1.0
 google-auth-oauthlib==1.0.0

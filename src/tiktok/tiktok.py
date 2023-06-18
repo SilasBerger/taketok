@@ -13,10 +13,14 @@ class TikTokResult:
         self.bytes = video_bytes
 
 
-def resolve_video_id(video_url: str) -> str:
+def resolve_video_url_if_shortened(video_url: str) -> str:
     is_shortened = urlparse(video_url).netloc.startswith('vm.tiktok')
-    target_url = video_url if not is_shortened else urlopen(video_url).geturl()
-    url_path = urlparse(target_url).path
+    return video_url if not is_shortened else urlopen(video_url).geturl()
+
+
+def resolve_video_id(video_url: str) -> str:
+    resolved_url = resolve_video_url_if_shortened(video_url)
+    url_path = urlparse(resolved_url).path
     return os.path.split(url_path)[-1]
 
 
