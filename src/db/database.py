@@ -32,6 +32,7 @@ class Database:
         conn = sqlite3.connect(str(sqlite_file))
         instance = Database(conn)
         instance._sanity_check(sqlite_file)
+        instance.execute("PRAGMA foreign_keys = 1")
         return instance
 
     def _sanity_check(self, sqlite_file):
