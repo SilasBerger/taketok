@@ -1,6 +1,6 @@
-from src.db._transactions.transaction import Transaction
-from src.db.database import Database
-from src.util.helpers import tuples_equal
+from src_python.db._transactions.transaction import Transaction
+from src_python.db.database import Database
+from src_python.util.helpers import tuples_equal
 
 
 class VideoMetadataTransaction(Transaction):

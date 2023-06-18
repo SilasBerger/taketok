@@ -1,6 +1,6 @@
 import json
 
-from src.util.path_utils import as_path, config_file
+from src_python.util.path_utils import as_path, config_file
 
 
 def read_config(config_name):

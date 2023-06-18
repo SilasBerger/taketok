@@ -1,4 +1,4 @@
-from src.db.database import Database
+from src_python.db.database import Database
 
 
 class Transaction:

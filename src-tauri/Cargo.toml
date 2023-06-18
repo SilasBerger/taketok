@@ -1,8 +1,8 @@
 [package]
-name = "app"
+name = "taketok"
 version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "A TikTok content distillery."
+authors = ["Silas Berger"]
 license = ""
 repository = ""
 edition = "2021"

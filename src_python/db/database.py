@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-from src.util.path_utils import db_scripts_dir
+from src_python.util.path_utils import db_scripts_dir
 
 
 class Database:

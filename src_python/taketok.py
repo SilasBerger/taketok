@@ -1,9 +1,9 @@
 import sys
 
-from src.data_importer import DataImporter
-from src.db.database import Database
-from src.util.config import read_config
-from src.util.path_utils import sqlite_file
+from src_python.data_importer import DataImporter
+from src_python.db.database import Database
+from src_python.util.config import read_config
+from src_python.util.path_utils import sqlite_file
 
 
 def get_config_name():

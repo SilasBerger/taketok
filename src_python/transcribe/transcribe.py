@@ -4,8 +4,8 @@ import pathlib
 import moviepy.editor
 import whisper
 
-from src.util.path_utils import tmp_dir
-from src.util.config import Config
+from src_python.util.path_utils import tmp_dir
+from src_python.util.config import Config
 
 
 class VideoTranscriber:

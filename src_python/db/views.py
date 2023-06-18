@@ -1,4 +1,4 @@
-from src.db.database import Database
+from src_python.db.database import Database
 
 
 def fetch_non_processed_source_urls(db: Database):

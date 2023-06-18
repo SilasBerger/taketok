@@ -1,8 +1,8 @@
-from src.db._transactions.download_state_transaction import DownloadStateTransaction
-from src.db._transactions.transaction import Transaction
-from src.db._transactions.transctipt_transaction import TranscriptTransaction
-from src.db._transactions.video_metadata_transaction import VideoMetadataTransaction
-from src.db.database import Database
+from src_python.db._transactions.download_state_transaction import DownloadStateTransaction
+from src_python.db._transactions.transaction import Transaction
+from src_python.db._transactions.transctipt_transaction import TranscriptTransaction
+from src_python.db._transactions.video_metadata_transaction import VideoMetadataTransaction
+from src_python.db.database import Database
 
 
 class TransactionHandler:

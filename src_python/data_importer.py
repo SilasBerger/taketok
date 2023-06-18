@@ -1,12 +1,12 @@
 import datetime
 import traceback
 
-from src.db.database import Database
-from src.db.transactions import video_metadata_transaction, download_state_transaction, transcript_transaction
-from src.db.views import fetch_non_processed_source_urls
-from src.tiktok.tiktok import resolve_video_id, tiktok_download, resolve_video_url_if_shortened
-from src.transcribe.transcribe import VideoTranscriber
-from src.util.config import Config
+from src_python.db.database import Database
+from src_python.db.transactions import video_metadata_transaction, download_state_transaction, transcript_transaction
+from src_python.db.views import fetch_non_processed_source_urls
+from src_python.tiktok.tiktok import resolve_video_id, tiktok_download, resolve_video_url_if_shortened
+from src_python.transcribe.transcribe import VideoTranscriber
+from src_python.util.config import Config
 
 
 class DataImporter:

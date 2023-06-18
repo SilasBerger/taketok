@@ -1,5 +1,5 @@
-from src.db._transactions.transaction import Transaction
-from src.db.database import Database
+from src_python.db._transactions.transaction import Transaction
+from src_python.db.database import Database
 
 
 class DownloadStateTransaction(Transaction):
