@@ -1,5 +1,5 @@
-from src.db.database import Database
-from src.util.path_utils import taketok_home, sqlite_file
+from src_python.db.database import Database
+from src_python.util.path_utils import taketok_home, sqlite_file
 
 
 def main():
