@@ -1,6 +1,5 @@
-import { createSignal } from "solid-js";
-import logo from "./assets/logo.svg";
-import { invoke } from "@tauri-apps/api/tauri";
+import {createSignal} from "solid-js";
+import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
@@ -9,43 +8,25 @@ function App() {
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name: name() }));
+    setGreetMsg(await invoke("greet", {name: name()}));
   }
 
   return (
-    <div class="container">
-        <h1 class="text-5xl font-bold underline text-amber-500">
-            Hello world!!
-        </h1>
+    <div class="flex flex-col items-center max-w-full mt-7">
+      <h1 class="text-5xl font-bold underline text-amber-500">
+        Hello world!!
+      </h1>
 
-      <div class="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={logo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-
-      <p>Click on the Tauri, Vite, and Solid logos to learn more.</p>
-
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
+      <div class="mt-5 mb-5">
         <input
-          id="greet-input"
+          class="border border-solid border-1 border-black mr-4 p-1 ps-3 pe-3 rounded-2xl"
           onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
+          placeholder="Enter a name..."/>
+
+        <button
+          class="bg-blue-400 ps-4 pe-4 pt-2 pb-2 rounded-3xl"
+          onClick={greet}>Greet</button>
+      </div>
 
       <p>{greetMsg()}</p>
     </div>
