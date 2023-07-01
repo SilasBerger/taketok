@@ -1,4 +1,4 @@
 git+https://github.com/openai/whisper.git
 moviepy
 playwright
-TikTokApi
+TikTokApi @ git+https://github.com/SilasBerger/TikTok-Api@41b507d9e04326dd20d86ae6c050ed54af4feef3 (https://github.com/SilasBerger/TikTok-Api/tree/v5.2.2-patch)

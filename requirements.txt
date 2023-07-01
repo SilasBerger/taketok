@@ -40,10 +40,12 @@ requests-oauthlib==1.3.1
 rsa==4.9
 six==1.16.0
 sympy==1.12
-TikTokApi==5.2.2
+TikTokApi @ git+https://github.com/SilasBerger/TikTok-Api@41b507d9e04326dd20d86ae6c050ed54af4feef3
 tiktoken==0.3.1
 torch==2.0.1
 tqdm==4.65.0
 typing_extensions==4.6.3
 uritemplate==4.1.1
 urllib3==1.26.16
+
+Flask~=2.3.2
