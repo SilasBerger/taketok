@@ -29,4 +29,5 @@ def transcribe():
     video_id = payload['videoId']
     video_output_dir = as_path(payload['videoOutputDir'])
     whisper_model = payload['whisperModel']
-    return transcribe_video(video_id, video_output_dir, whisper_model), 200
+    transcript = transcribe_video(video_id, video_output_dir, whisper_model)
+    return {'transcript': transcript}, 200
