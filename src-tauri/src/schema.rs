@@ -33,7 +33,7 @@ diesel::table! {
 }
 
 diesel::table! {
-    source_urls (url) {
+    source_url (url) {
         url -> Text,
         processed -> Integer,
         failure_reason -> Nullable<Text>,
