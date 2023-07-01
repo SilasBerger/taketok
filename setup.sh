@@ -22,5 +22,8 @@ pip install -r requirements.txt
 python -m playwright install
 deactivate
 
+# TODO: Check if already installed; check Rust version.
+cargo install diesel_cli --no-default-features --features "sqlite"
+
 echo ""
 echo "DONE - Setup complete, happy hacking!"
