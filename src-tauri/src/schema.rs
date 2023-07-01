@@ -33,7 +33,7 @@ diesel::table! {
 }
 
 diesel::table! {
-    source_urls (url) {
+    source_url (url) {
         url -> Text,
         processed -> Integer,
         failure_reason -> Nullable<Text>,
@@ -84,7 +84,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     author_info,
     challenge,
     hashtag,
-    source_urls,
+    source_url,
     taketok_schema,
     video,
     video_challenge_rel,

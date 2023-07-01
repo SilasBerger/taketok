@@ -6,9 +6,9 @@ mod dao;
 mod schema;
 
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use crate::dao::{SourceUrls};
+use crate::dao::{SourceUrl};
 use crate::path_utils::taketok_home;
-use crate::schema::source_urls::dsl::source_urls;
+use crate::schema::source_url::dsl::source_url;
 
 #[tauri::command]
 fn read_from_db() {
@@ -17,8 +17,8 @@ fn read_from_db() {
     let mut connection = SqliteConnection::establish(db_path_str)
         .unwrap_or_else(|_| panic!("Error connecting to {}", db_path_str));
 
-    let result = source_urls
-        .select(SourceUrls::as_select())
+    let result = source_url
+        .select(SourceUrl::as_select())
         .load(&mut connection)
         .unwrap();
 
