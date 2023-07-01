@@ -11,7 +11,7 @@ use crate::path_utils::taketok_home;
 use crate::schema::source_url::dsl::source_url;
 
 #[tauri::command]
-fn read_from_db() {
+fn fetch_source_urls() -> Vec<SourceUrl> {
     let db_path = taketok_home().join("data").join("dev.sqlite");
     let db_path_str = db_path.to_str().unwrap();
     let mut connection = SqliteConnection::establish(db_path_str)
@@ -22,14 +22,12 @@ fn read_from_db() {
         .load(&mut connection)
         .unwrap();
 
-    for result_line in result {
-        println!("{:?}", result_line);
-    }
+    result
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![read_from_db])
+        .invoke_handler(tauri::generate_handler![fetch_source_urls])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

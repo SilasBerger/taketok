@@ -1,6 +1,7 @@
 use diesel::prelude::*;
+use serde::Serialize;
 
-#[derive(Queryable, Selectable, Debug)]
+#[derive(Queryable, Selectable, Serialize, Debug)]
 #[diesel(table_name = crate::schema::source_url)]
 pub struct SourceUrl {
     pub url: String,
