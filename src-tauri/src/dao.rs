@@ -4,7 +4,7 @@ use diesel::prelude::*;
 #[diesel(table_name = crate::schema::source_urls)]
 pub struct SourceUrls {
     pub url: String,
-    pub processed: bool,
+    pub processed: i32,
     pub failure_reason: Option<String>,
 }
 
