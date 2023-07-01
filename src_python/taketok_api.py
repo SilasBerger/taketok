@@ -1,4 +1,3 @@
-import asyncio
 import traceback
 
 from flask import Flask, request
@@ -7,7 +6,6 @@ from transcribe.transcribe import transcribe_video
 from util.path_utils import as_path
 
 app = Flask(__name__)
-asyncio.set_event_loop(asyncio.SelectorEventLoop())
 
 
 @app.route('/import-from-source-url', methods=['POST'])
