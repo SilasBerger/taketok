@@ -1,6 +1,6 @@
 import sys
 
-from src_python.data_importer import DataImporter
+from src_python.old_data_importer import DataImporter
 from src_python.db.database import Database
 from src_python.util.config import read_config
 from src_python.util.path_utils import sqlite_file
