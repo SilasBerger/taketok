@@ -9,7 +9,7 @@ drop table if exists source_urls;
 drop table if exists taketok_schema;
 
 create table taketok_schema (
-    schema_version primary key
+    schema_version text primary key
 ) without rowid;
 
 create table source_urls(
@@ -37,7 +37,7 @@ create table video (
     download_date_iso text,
     description text,
     upload_date_iso text,
-    author_id references author(id),
+    author_id text references author(id),
     transcript text
 ) without rowid;
 
@@ -47,20 +47,20 @@ create table hashtag (
 );
 
 create table video_hashtag_rel (
-    video_id not null references video(id) on delete cascade,
-    hashtag_id not null references hashtag(id) on delete cascade,
+    video_id text not null references video(id) on delete cascade,
+    hashtag_id integer not null references hashtag(id) on delete cascade,
     primary key (video_id, hashtag_id)
 ) without rowid;
 
 create table challenge (
     id text primary key not null,
-    title,
-    description
+    title text,
+    description text
 ) without rowid;
 
 create table video_challenge_rel (
-    video_id not null references video(id) on delete cascade,
-    challenge_id not null references challenge(id) on delete cascade,
+    video_id text not null references video(id) on delete cascade,
+    challenge_id text not null references challenge(id) on delete cascade,
     primary key (video_id, challenge_id)
 ) without rowid;
 
