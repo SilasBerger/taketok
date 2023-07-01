@@ -9,7 +9,7 @@ from src_python.transcribe.transcribe import VideoTranscriber
 from src_python.util.config import Config
 
 
-class DataImporter:
+class VideoImporter:
 
     def __init__(self, db: Database, config: Config):
         self._db = db
