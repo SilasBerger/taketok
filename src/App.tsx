@@ -3,31 +3,16 @@ import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = createSignal("");
-  const [name, setName] = createSignal("");
 
-  async function greet() {
-    setGreetMsg(await invoke("greet", {name: name()}));
+  async function readFromDb() {
+    await invoke("read_from_db", {});
   }
 
   return (
     <div class="flex flex-col items-center max-w-full mt-7">
-      <h1 class="text-5xl font-bold underline text-amber-500">
-        Hello world!!
-      </h1>
-
-      <div class="mt-5 mb-5">
-        <input
-          class="border border-solid border-1 border-black mr-4 p-1 ps-3 pe-3 rounded-2xl"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."/>
-
-        <button
-          class="bg-blue-400 ps-4 pe-4 pt-2 pb-2 rounded-3xl"
-          onClick={greet}>Greet</button>
-      </div>
-
-      <p>{greetMsg()}</p>
+      <button
+        class="rounded-3xl p-2 ps-4 pe-4 bg-purple-200"
+        onClick={readFromDb}>Read from DB</button>
     </div>
   );
 }
