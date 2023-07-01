@@ -7,3 +7,9 @@ pub struct SourceUrls {
     pub processed: bool,
     pub failure_reason: Option<String>,
 }
+
+#[derive(Queryable, Selectable, Debug)]
+#[diesel(table_name = crate::schema::author)]
+pub struct Author {
+    pub id: String,
+}
