@@ -36,11 +36,11 @@ Create the default config file `~/taketok/config/default.config.json` as follows
 * `whisperModel`: The whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
 
 ## Usage Instructions
-_For all command line instructions in this section, make to have the virtualenv activated, which was previously
+_For all command line instructions in this section, make sure to have the virtualenv activated, which was previously
 created for you by the `setup.sh` script (e.g. `source ./venv/bin/activate` for UNIX-like systems)._
 
 ### Importing source links
-The starting point for the process of importing and transcribing a videos is a list of source URLs - think of it as a
+The starting point for the process of importing and transcribing videos is a list of source URLs - think of it as a
 download queue. Until there is a full graphical UI, the easiest way to import source URLs is as follows:
 
 Create a file `<taketok_home>/source-links.<config-name>.txt`, to which you can add any links to be imported into the
@@ -62,10 +62,10 @@ To launch the API backend, run the following command from the `src_python` direc
 
 ### Importing videos
 * ✅ You have completed the setup instructions, including creating the config file?
-* ✅ You have imported some source links for your config of choice (e.g. `default)?
+* ✅ You have imported some source links for your config of choice (e.g. `default`)?
 * ✅ The REST API backend is running?
 
-Great, you can now start importing videos! Simply run
+Great, you can now start importing videos! From the `src_python` directory, simply run
 
 * `python taketok.py` to launch `taketok` with the default config (`default.config.json`), or
 * `python taketok.py myOtherConfig` to launch `taketok` with a custom config called `myOtherConfig.config.json`
