@@ -7,10 +7,10 @@ class DownloadStateTransaction(Transaction):
     def __init__(self, db: Database):
         super().__init__(db)
 
-    def mark_source_as_failed(self, source_url: str, failure_reason: str):
+    def mark_source_as_failed(self, source_url: str):
         self._db.execute("""
-            update source_urls
-            set processed = true, failure_reason = ?
+            update source_url
+            set processed = true
             where url = ?
-        """, (failure_reason, source_url))
+        """, (source_url,))
         return self

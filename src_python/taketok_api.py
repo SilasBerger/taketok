@@ -18,7 +18,9 @@ def import_from_source_url():
         video_out_dir = as_path(payload['videoOutputDir'])
         return download_video(source_url, video_out_dir), 200
     except Exception:
-        return traceback.format_exc(), 500
+        stack_trace = traceback.format_exc()
+        print(stack_trace)
+        return stack_trace, 500
 
 
 @app.route('/transcribe', methods=['POST'])

@@ -64,4 +64,4 @@ class VideoMetadataTransaction(Transaction):
             ))
 
     def mark_source_url_as_processed(self, source_url):
-        self._db.execute("update source_urls set processed = true where url = ?", (source_url,))
+        self._db.execute("update source_url set processed = true where url = ?", (source_url,))

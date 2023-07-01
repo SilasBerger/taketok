@@ -23,20 +23,16 @@ def _extract_challenges(info):
 
 
 def download_video(source_url: str, video_out_dir: pathlib.Path):
-    print("Starting download")
     current_date_iso = datetime.datetime.now().isoformat()  # TODO: Use UTC date
     resolved_url = resolve_video_url_if_shortened(source_url)
     video_id = resolve_video_id(resolved_url)
-    print("video_id: " + video_id)
 
     tiktok_result = tiktok_download(video_id)
-    print("got tiktok result")
     _save_video(tiktok_result.bytes, video_id, video_out_dir)
 
     info = tiktok_result.info['itemInfo']['itemStruct']
     author = info['author']
 
-    print("about to return result")
     return {
         'video': {
             "id": video_id,
