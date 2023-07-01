@@ -1,7 +1,12 @@
 # TakeTok
 A TikTok content distillery.
 
-## Setup & Usage
+## A quick word...
+This project is under heavy construction 🚧. While the ultimate goal is of course to provide a simple, polished
+out-of-the-box user experience for everyone, we are very much not there yet. Therefore, this setup guide and usage
+instructions are solely targeted towards developers and other tech-savvy power users for now. It will get better ;)
+
+## Setup
 **Note:** Whenever we mention the _taketok home_ or `~/taketok` directory, we refer to a directory called `taketok`,
 located at the root of the user home, i.e. `~/taketok` (UNIX-like) or `%USERHOME%/taketok` (Windows). You will have to
 create  this directory yourself, as part of the setup process.
@@ -10,7 +15,7 @@ create  this directory yourself, as part of the setup process.
 * **Python 3.10** - e.g. `brew install python@3.10` (macOS)
 * **ffmpeg** - `brew install ffmpeg` (MacOS) | `choco install ffmpeg` (Win) | `sudo apt install ffmpeg` (Debian)
 
-### Step 2: Set up the Python environment
+### Step 2: Set up the Python environment (and some other useful stuff...)
 Simply run `./setup.sh`
 
 ### Step 3: Create the configuration file
@@ -30,23 +35,43 @@ Create the default config file `~/taketok/config/default.config.json` as follows
 * `videoOutputDir`: Where `taketok` puts all downloaded videos
 * `whisperModel`: The whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
 
-### Step 3.1: Import source links
-Create a file `<taketok_home>/source-links.txt`, to which you can add any links to be imported into the database,
-one link per line. This is a temporary solution for getting source links into the DB until there is a UI.
+## Usage Instructions
+_For all command line instructions in this section, make to have the virtualenv activated, which was previously
+created for you by the `setup.sh` script (e.g. `source ./venv/bin/activate` for UNIX-like systems)._
 
-With the virtual env activated (`source ./venv/bin/activate`), run
+### Importing source links
+The starting point for the process of importing and transcribing a videos is a list of source URLs - think of it as a
+download queue. Until there is a full graphical UI, the easiest way to import source URLs is as follows:
 
-`python insert_source_links_from_file.py`
+Create a file `<taketok_home>/source-links.<config-name>.txt`, to which you can add any links to be imported into the
+database, one link per line. Then, run the following command:
 
-from the `dev` directory, to go through this file and insert all links not yet present in the database. This is
-hard-coded to the `default` configuration for now.
+`python insert_source_links_from_file.py <config-name>`
 
-### Step 4: Run it!
-_With the virtual env activated (`source ./venv/bin/activate`)..._
+from the `dev` directory, to go through this file and insert all links not yet present in the database corresponding to
+the specified config. If no `<config-name>` is given, this will default to the `default` configuration as usual.
 
-* Run `python taketok.py` to launch `taketok` with the default config (`default.config.json`)
-* Run `python taketok.py myOtherConfig` to launch `taketok` with a custom config called `myOtherConfig.config.json`
+### Starting the API backend
+The Python REST API backend is where all the core logic resides, when it comes to interacting with TikTok or
+transcribing videos. This is also what will ultimately be left of the Python code, once the rest is migrated to
+Tauri / Rust.
 
-## Notes
+To launch the API backend, run the following command from the `src_python` directory:
+
+`python -m flask --app taketok_api run`
+
+### Importing videos
+* ✅ You have completed the setup instructions, including creating the config file?
+* ✅ You have imported some source links for your config of choice (e.g. `default)?
+* ✅ The REST API backend is running?
+
+Great, you can now start importing videos! Simply run
+
+* `python taketok.py` to launch `taketok` with the default config (`default.config.json`), or
+* `python taketok.py myOtherConfig` to launch `taketok` with a custom config called `myOtherConfig.config.json`
+
+## Dev notes (this probably isn't particularly relevant to you...)
 * pip setup instructions for whisper didn't work, pip install command had to be `pip install git+https://github.com/openai/whisper.git`
 * whisper didn't run on the latest Python version (3.11), had to use 3.10 (latest stable)
+* had to create a fork of TikTokApi (git+https://github.com/SilasBerger/TikTok-Api@41b507d9e04326dd20d86ae6c050ed54af4feef3)
+  because there was an issue with the asyncio event loop, once I started using Flask
