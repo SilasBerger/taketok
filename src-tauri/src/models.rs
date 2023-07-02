@@ -1,6 +1,15 @@
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
+/*
+Models are used for:
+- reading and writing to and from DB
+- requests to Python REST API
+- passing data between UI and Tauri backend
+
+-> maybe split? Could lead to redundancies...
+ */
+
 #[derive(Queryable, Selectable, Serialize, Debug)]
 #[diesel(table_name = crate::schema::source_url)]
 pub struct SourceUrl {

@@ -2,12 +2,11 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod path_utils;
-mod dao;
+mod models;
 mod schema;
 
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use reqwest::blocking;
-use crate::dao::{SourceUrl, TranscriptRequest, TranscriptResponse};
+use crate::models::{SourceUrl, TranscriptRequest, TranscriptResponse};
 use crate::path_utils::taketok_home;
 use crate::schema::source_url::dsl::source_url;
 
