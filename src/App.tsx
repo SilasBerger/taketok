@@ -27,10 +27,10 @@ function App() {
     <div class="flex flex-col items-center max-w-full mt-7">
       <button
         class="rounded-3xl p-2 ps-4 pe-4 bg-purple-200"
-        onClick={fetchSourceUrls}>Fetch source URLs</button>
+        onClick={() => fetchSourceUrls()}>Fetch source URLs</button>
       <button
         class="rounded-3xl p-2 ps-4 pe-4 bg-purple-200"
-        onClick={requestATranscript}>Request a transcript</button>
+        onClick={() => requestATranscript()}>Request a transcript</button>
 
       <h2>Source URLs</h2>
       <table class="table-auto">

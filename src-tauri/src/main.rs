@@ -5,6 +5,8 @@ mod path_utils;
 mod models;
 mod schema;
 
+use std::ops::Mul;
+use std::time::Duration;
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
 use crate::models::{SourceUrl, TranscriptRequest, TranscriptResponse};
 use crate::path_utils::taketok_home;
@@ -26,22 +28,24 @@ fn fetch_source_urls() -> Vec<SourceUrl> {
 }
 
 #[tauri::command]
-fn request_a_transcript() -> String {
-    let client = reqwest::blocking::Client::new();
+async fn request_a_transcript() -> String {
+    let client = reqwest::Client::new();
 
     let request_body = TranscriptRequest {
-        video_id: "7193720678988746026".to_string(),
+        video_id: "7202782477717343531".to_string(),
         video_output_dir: "/Users/silas/taketok/videos/dev".to_string(),
         whisper_model: "small".to_string(),
     };
 
     let result = client
         .post("http://127.0.0.1:5000/transcribe")
+        .timeout(Duration::from_secs(60).mul(10))
         .json(&request_body)
         .send()
+        .await
         .unwrap();
 
-    let transcript_response: TranscriptResponse = result.json().unwrap();
+    let transcript_response: TranscriptResponse = result.json().await.unwrap();
     transcript_response.transcript.to_string()
 }
 
