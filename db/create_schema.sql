@@ -5,7 +5,6 @@ drop table if exists hashtag;
 drop table if exists video;
 drop table if exists author_info;
 drop table if exists author;
-drop table if exists source_urls; /* TODO: Remove */
 drop table if exists source_url;
 drop table if exists taketok_schema;
 
