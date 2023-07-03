@@ -11,8 +11,13 @@ pub struct SourceUrl {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
+    #[serde(rename = "videoId")]
     pub video_id: String,
+
+    #[serde(rename = "videoOutputDir")]
     pub video_output_dir: String,
+
+    #[serde(rename = "whisperModel")]
     pub whisper_model: String,
 }
 
@@ -23,7 +28,10 @@ pub struct TranscriptResponse {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ImportRequest {
+    #[serde(rename = "sourceUrl")]
     pub source_url: String,
+
+    #[serde(rename = "videoOutputDir")]
     pub video_output_dir: String,
 }
 
@@ -36,20 +44,34 @@ pub struct ImportResponse {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ImportResponseVideo {
     pub id: String,
+
+    #[serde(rename = "resolvedUrl")]
     pub resolved_url: String,
+
+    #[serde(rename = "downloadDateIso")]
     pub download_date_iso: String,
+
     pub description: String,
+
+    #[serde(rename = "uploadDateIso")]
     pub upload_date_iso: String,
+
     pub hashtags: Vec<String>,
+
     pub challenges: Vec<ImportResponseChallenge>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ImportResponseAuthor {
     pub id: String,
+
+    #[serde(rename = "uniqueId")]
     pub unique_id: String,
+
     pub nickname: String,
+
     pub signature: String,
+
     pub date: String,
 }
 
