@@ -1,10 +1,16 @@
-import {createSignal, For, onMount} from "solid-js";
+import {createSignal, For, onMount, Show} from "solid-js";
 import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
 
   const [sourceUrls, setSourceUrls] = createSignal<SourceUrl[]>([]);
+  const [
+    videosDict,
+    setVideosDict
+  ] = createSignal<{[key: string]: ImportResponse}>({});
+
+  const videos = () => Object.values(videosDict());
 
   interface SourceUrl {
     url: string,
@@ -12,13 +18,45 @@ function App() {
     failure_reason?: string,
   }
 
+  interface Video {
+      id: string,
+      resolvedUrl: string,
+      downloadDateIso: string,
+      description: string,
+      uploadDateIso: string,
+      hashtags: string[],
+      challenges: Challenge[],
+      transcript?: string,
+  }
+
+  interface Challenge {
+     id: string,
+     title: string,
+     description: string,
+  }
+
+  interface Author {
+    id: string,
+    uniqueId: string,
+    nickname: string,
+    signature: string,
+    date: string,
+  }
+
+  interface ImportResponse {
+    video: Video,
+    author: Author,
+  }
+
   async function requestTranscript(videoId: string) {
     const transcript: string = await invoke("request_transcript", {videoId});
   }
 
   async function requestImport(sourceUrl: string) {
-    const result = await invoke("import_from_source_url", {sourceUrl});
-    console.log(result);
+    const result: ImportResponse = await invoke("import_from_source_url", {sourceUrl});
+    const nextVideosDict = {...videosDict()};
+    nextVideosDict[result.video.id] = result
+    setVideosDict(nextVideosDict)
   }
 
   onMount(async () => {
@@ -47,6 +85,44 @@ function App() {
               </td>
             </tr>
           }</For>
+        </tbody>
+      </table>
+
+      <div class="mt-4"></div>
+
+      <table class="table-auto table-border">
+        <thead>
+        <tr class="table-border">
+          <th class="table-border px-2 py-1">ID</th>
+          <th class="table-border px-2 py-1">Resolved URL</th>
+          <th class="table-border px-2 py-1">Download Date</th>
+          <th class="table-border px-2 py-1">Upload Date</th>
+          <th class="table-border px-2 py-1">Hashtags</th>
+          <th class="table-border px-2 py-1">Author UniqueID</th>
+          <th class="table-border px-2 py-1">Author Nickname</th>
+          <th class="table-border px-2 py-1">Author Signature</th>
+          <th class="table-border px-2 py-1">Transcript</th>
+        </tr>
+        </thead>
+        <tbody>
+        <For each={videos()}>{(video: ImportResponse) =>
+          <tr>
+            <td class="table-border px-2 py-1">{video.video.id}</td>
+            <td class="table-border px-2 py-1">{video.video.resolvedUrl}</td>
+            <td class="table-border px-2 py-1">{video.video.downloadDateIso}</td>
+            <td class="table-border px-2 py-1">{video.video.uploadDateIso}</td>
+            <td class="table-border px-2 py-1">{video.video.hashtags.join(', ')}</td>
+            <td class="table-border px-2 py-1">{video.author.uniqueId}</td>
+            <td class="table-border px-2 py-1">{video.author.nickname}</td>
+            <td class="table-border px-2 py-1">{video.author.signature}</td>
+            <td class="table-border px-2 py-1">
+              {video.video.transcript ?
+                video.video.transcript :
+                <button class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
+                onClick={() => requestTranscript(video.video.id)}>Transcribe</button>}
+            </td>
+          </tr>
+        }</For>
         </tbody>
       </table>
     </div>
