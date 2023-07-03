@@ -45,7 +45,7 @@ def download_video(source_url: str, video_out_dir: pathlib.Path):
         },
         'author': {
             "id": author['id'],
-            'uniqueId': author['uniqueId'],
+            'unique_id': author['uniqueId'],
             'nickname': author['nickname'],
             'signature': author['signature'],
             'date': current_date_iso

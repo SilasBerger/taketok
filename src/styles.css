@@ -10,3 +10,9 @@ body,
 html {
   margin: 0;
 }
+
+@layer components {
+  .table-border {
+    @apply border-solid border-black border-2
+  }
+}

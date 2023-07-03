@@ -32,7 +32,8 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             fetch_source_urls,
-            request_a_transcript
+            request_a_transcript,
+            import_from_source_url,
         ])
         .manage(state)
         .run(tauri::generate_context!())

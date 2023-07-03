@@ -1,11 +1,10 @@
-import {createSignal, For} from "solid-js";
+import {createSignal, For, onMount} from "solid-js";
 import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
 
   const [sourceUrls, setSourceUrls] = createSignal<SourceUrl[]>([]);
-  const [transcript, setTranscript] = createSignal("");
 
   interface SourceUrl {
     url: string,
@@ -13,47 +12,43 @@ function App() {
     failure_reason?: string,
   }
 
-  async function fetchSourceUrls() {
-    console.log("trying to fetch source urls");
-    setSourceUrls(await invoke("fetch_source_urls", {}));
+  async function requestTranscript(videoId: string) {
+    const transcript: string = await invoke("request_transcript", {videoId});
   }
 
-  async function requestATranscript() {
-    const transcript: string = await invoke("request_a_transcript", {});
-    setTranscript(transcript);
+  async function requestImport(sourceUrl: string) {
+    const result = await invoke("import_from_source_url", {sourceUrl});
+    console.log(result);
   }
+
+  onMount(async () => {
+    setSourceUrls(await invoke("fetch_source_urls", {}));
+  })
 
   return (
-    <div class="flex flex-col items-center max-w-full mt-7">
-      <button
-        class="rounded-3xl p-2 ps-4 pe-4 bg-purple-200"
-        onClick={() => fetchSourceUrls()}>Fetch source URLs</button>
-      <button
-        class="rounded-3xl p-2 ps-4 pe-4 bg-purple-200"
-        onClick={() => requestATranscript()}>Request a transcript</button>
-
-      <h2>Source URLs</h2>
-      <table class="table-auto">
+    <div class="flex flex-col items-center justify-start max-w-full m-7">
+      <table class="table-auto table-border">
         <thead>
-          <tr>
-            <th>URL</th>
-            <th>Processed?</th>
-            <th>Failure Reason</th>
+          <tr class="table-border">
+            <th class="table-border px-2 py-1">URL</th>
+            <th class="table-border px-2 py-1">Processed?</th>
+            <th class="table-border px-2 py-1">Interactions</th>
           </tr>
         </thead>
         <tbody>
           <For each={sourceUrls()}>{(sourceUrl: SourceUrl) =>
             <tr>
-              <td>{sourceUrl.url}</td>
-              <td>{sourceUrl.processed}</td>
-              <td>{sourceUrl.failure_reason}</td>
+              <td class="table-border px-2 py-1">{sourceUrl.url}</td>
+              <td class="table-border px-2 py-1">{sourceUrl.processed}</td>
+              <td class="table-border px-2 py-1">
+                <button
+                  class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
+                  onClick={() => requestImport(sourceUrl.url)}>Import</button>
+              </td>
             </tr>
           }</For>
         </tbody>
       </table>
-
-      <h2>Transcript</h2>
-      <span>{transcript()}</span>
     </div>
   );
 }
