@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="taketok-api" type="Python.FlaskServer">
+  <configuration default="false" name="core-api" type="Python.FlaskServer">
     <module name="taketok" />
     <option name="target" value="$PROJECT_DIR$/src_python/taketok_api.py" />
     <option name="targetType" value="PATH" />
