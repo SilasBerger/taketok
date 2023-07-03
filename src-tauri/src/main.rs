@@ -3,7 +3,7 @@
 
 use diesel::{QueryDsl, SelectableHelper, SqliteConnection};
 
-use crate::commands::{fetch_source_urls, request_a_transcript, import_from_source_url};
+use crate::commands::{fetch_source_urls, request_transcript, import_from_source_url};
 use crate::config::Config;
 use crate::core_api_client::CoreApiClient;
 use crate::path_utils::{config_file, taketok_home};
@@ -32,7 +32,7 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             fetch_source_urls,
-            request_a_transcript,
+            request_transcript,
             import_from_source_url,
         ])
         .manage(state)

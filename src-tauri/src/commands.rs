@@ -20,7 +20,7 @@ pub fn fetch_source_urls() -> Result<Vec<SourceUrl>, TakeTokError> {
 }
 
 #[tauri::command]
-pub async fn request_a_transcript(state: State<'_, TakeTokState>, video_id: String) -> Result<String, TakeTokError> {
+pub async fn request_transcript(state: State<'_, TakeTokState>, video_id: String) -> Result<String, TakeTokError> {
     let video_output_dir = &state.config.video_output_dir;
     let whisper_model = &state.config.whisper_model;
     let result = state

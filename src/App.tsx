@@ -50,6 +50,13 @@ function App() {
 
   async function requestTranscript(videoId: string) {
     const transcript: string = await invoke("request_transcript", {videoId});
+    const nextVideosDict = {...videosDict()};
+    const oldVideo = nextVideosDict[videoId];
+    nextVideosDict[videoId] = {
+      ...oldVideo,
+      video: {...oldVideo.video, transcript: transcript},
+    };
+    setVideosDict(nextVideosDict);
   }
 
   async function requestImport(sourceUrl: string) {
@@ -116,10 +123,13 @@ function App() {
             <td class="table-border px-2 py-1">{video.author.nickname}</td>
             <td class="table-border px-2 py-1">{video.author.signature}</td>
             <td class="table-border px-2 py-1">
-              {video.video.transcript ?
-                video.video.transcript :
-                <button class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
-                onClick={() => requestTranscript(video.video.id)}>Transcribe</button>}
+              <Show
+                when={video.video.transcript}
+                fallback={
+                  <button class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
+                        onClick={() => requestTranscript(video.video.id)}>Transcribe</button>}>
+                <div>{video.video.transcript}</div>
+              </Show>
             </td>
           </tr>
         }</For>
