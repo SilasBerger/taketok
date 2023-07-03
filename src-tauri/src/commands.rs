@@ -1,9 +1,11 @@
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
+use tauri::State;
 use crate::core_api_client::CoreApiClient;
 use crate::error::TakeTokError;
 use crate::models::SourceUrl;
 use crate::path_utils::taketok_home;
 use crate::schema::source_url::dsl::source_url;
+use crate::state::TakeTokState;
 
 #[tauri::command]
 pub fn fetch_source_urls() -> Result<Vec<SourceUrl>, TakeTokError> {
@@ -19,7 +21,6 @@ pub fn fetch_source_urls() -> Result<Vec<SourceUrl>, TakeTokError> {
 }
 
 #[tauri::command]
-pub async fn request_a_transcript() -> Result<String, TakeTokError> {
-    let api_client = CoreApiClient::mock();
-    Ok(api_client.request_transcript().await?)
+pub async fn request_a_transcript(state: State<'_, TakeTokState>) -> Result<String, TakeTokError> {
+    Ok(state.core_api_client.request_transcript().await?)
 }
