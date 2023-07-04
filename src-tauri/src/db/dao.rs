@@ -64,3 +64,14 @@ pub fn save_video_metadata(conn: &mut SqliteConnection, video_data: &ImportRespo
 
     Ok(())
 }
+
+pub fn insert_transcript(conn: &mut SqliteConnection, video_id: &str, transcript: &str) -> Result<(), TakeTokError> {
+    use crate::db::schema::video;
+
+    diesel::update(video::dsl::video)
+        .filter(video::id.eq(video_id))
+        .set(video::transcript.eq(transcript))
+        .execute(conn)?;
+    
+    Ok(())
+}

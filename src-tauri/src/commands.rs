@@ -1,6 +1,6 @@
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper};
 use tauri::{AppHandle, Manager, State, Wry};
-use crate::db::dao::{insert_author_if_not_exists, save_video_metadata, update_author_info_if_changed};
+use crate::db::dao::{insert_author_if_not_exists, insert_transcript, save_video_metadata, update_author_info_if_changed};
 use crate::db::db_models::SourceUrl;
 use crate::error::TakeTokError;
 use crate::db::schema;
@@ -48,6 +48,16 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
         insert_author_if_not_exists(&mut conn, author_id)?;
         update_author_info_if_changed(&mut conn, &author)?;
         save_video_metadata(&mut conn, &video, &author.id)?;
+        Ok(())
+    })?;
+
+    let transcript = state
+        .core_api_client
+        .request_transcript(video_id, &state.config.video_output_dir, &state.config.whisper_model)
+        .await?;
+
+    db_connection.transaction::<(), TakeTokError, _>(| mut conn| {
+        insert_transcript(&mut conn, video_id, &transcript)?;
         Ok(())
     })?;
 
