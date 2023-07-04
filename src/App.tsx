@@ -3,9 +3,10 @@ import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
 import DownloadPage from "./pages/DownloadPage";
 import LibraryPage from "./pages/LibraryPage";
+import PageCarousel from "./components/PageCarousel/PageCarousel";
+import {Page} from "./shared/models";
 
 function App() {
-
 
   function registerToggleDevtoolsKeyboardTrigger() {
     // TODO: Not very nice, refactor at some point...
@@ -24,13 +25,7 @@ function App() {
     registerToggleDevtoolsKeyboardTrigger();
   })
 
-  return (
-    <div class="flex flex-col items-center justify-start max-w-full m-7">
-      <DownloadPage />
-      <div class="mt-4"></div>
-      <LibraryPage />
-    </div>
-  );
+  return ( <PageCarousel /> );
 }
 
 export default App;

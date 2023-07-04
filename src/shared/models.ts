@@ -26,3 +26,8 @@ export interface VideoFullInfo {
   author: Author,
   hashtags: string[]
 }
+
+export enum Page {
+  LIBRARY = "Library",
+  DOWNLOADS = "Downloads",
+}
