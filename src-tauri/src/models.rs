@@ -1,19 +1,4 @@
-use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-
-#[derive(Queryable, Selectable, Serialize, Debug)]
-#[diesel(table_name = crate::schema::source_url)]
-pub struct SourceUrl {
-    pub url: String,
-    pub processed: i32,
-    pub failure_reason: Option<String>,
-}
-
-#[derive(Insertable, Debug)]
-#[diesel(table_name = crate::schema::author)]
-pub struct Author {
-    pub id: String
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
@@ -72,13 +57,13 @@ pub struct ImportResponseAuthor {
     pub id: String,
 
     #[serde(rename = "uniqueId")]
-    pub unique_id: String,
+    pub unique_id: Option<String>,
 
-    pub nickname: String,
+    pub nickname: Option<String>,
 
-    pub signature: String,
+    pub signature: Option<String>,
 
-    pub date: String,
+    pub date: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

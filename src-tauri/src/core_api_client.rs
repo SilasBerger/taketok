@@ -1,10 +1,9 @@
 use std::ops::Mul;
-use std::path::PathBuf;
 use std::time::Duration;
 use serde::{Deserialize, Serialize};
 use crate::core_api_client::OpMode::{Live, Mock};
 use crate::error::TakeTokError;
-use crate::models::{ImportRequest, ImportResponse, ImportResponseVideo, TranscriptRequest, TranscriptResponse};
+use crate::models::{ImportRequest, ImportResponse, TranscriptRequest, TranscriptResponse};
 use crate::path_utils::mock_api_data_file;
 use crate::utils::read_as_json;
 

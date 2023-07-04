@@ -9,14 +9,13 @@ use crate::state::TakeTokState;
 
 mod path_utils;
 mod models;
-mod schema;
 mod error;
 mod core_api_client;
 mod commands;
 mod state;
 mod config;
 mod utils;
-mod dao;
+mod db;
 
 fn main() {
     let config = Config::load(config_file("dev"))

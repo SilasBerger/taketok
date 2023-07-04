@@ -1,10 +1,9 @@
-use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use tauri::{App, AppHandle, Manager, State, Wry};
-use crate::dao::insert_author_if_not_exists;
+use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper};
+use tauri::{AppHandle, Manager, State, Wry};
+use crate::db::dao::{insert_author_if_not_exists, update_author_info_if_changed};
+use crate::db::db_models::SourceUrl;
 use crate::error::TakeTokError;
-use crate::models::{ImportResponse, SourceUrl};
-use crate::path_utils::taketok_home;
-use crate::schema;
+use crate::db::schema;
 use crate::state::TakeTokState;
 use crate::utils::connect_to_db;
 
@@ -46,13 +45,12 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
 
     db_connection.transaction::<(), TakeTokError, _>(| mut conn| {
         insert_author_if_not_exists(&mut conn, author_id)?;
+        update_author_info_if_changed(&mut conn, &author)?;
         Ok(())
     })?;
 
     /*
     As transaction:
-    - save author if not exists
-    - update author info if changed
     - save video metadata
     - insert hashtags
     - insert challenges
