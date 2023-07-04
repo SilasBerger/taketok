@@ -72,8 +72,22 @@ function App() {
     }
   }
 
+  function registerToggleDevtoolsKeyboardTrigger() {
+    // TODO: Not very nice, refactor at some point...
+    window.onkeyup = async (event) => {
+      if (event.key == 'F12') {
+        try {
+          await invoke("toggle_devtools", {});
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }
+
   onMount(async () => {
     setSourceUrls(await invoke("fetch_source_urls", {}));
+    registerToggleDevtoolsKeyboardTrigger();
   })
 
   return (

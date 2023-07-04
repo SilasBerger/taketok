@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use crate::commands::{fetch_source_urls, request_transcript, import_from_source_url};
+use crate::commands::{fetch_source_urls, request_transcript, import_from_source_url, toggle_devtools};
 use crate::config::Config;
 use crate::core_api_client::CoreApiClient;
 use crate::path_utils::{config_file};
@@ -34,6 +34,7 @@ fn main() {
             fetch_source_urls,
             request_transcript,
             import_from_source_url,
+            toggle_devtools,
         ])
         .manage(state)
         .run(tauri::generate_context!())

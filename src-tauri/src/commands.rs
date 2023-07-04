@@ -1,5 +1,5 @@
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use tauri::State;
+use tauri::{App, AppHandle, Manager, State, Wry};
 use crate::dao::insert_author_if_not_exists;
 use crate::error::TakeTokError;
 use crate::models::{ImportResponse, SourceUrl};
@@ -59,5 +59,17 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
     (- mark source URL as processed)
      */
 
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn toggle_devtools(app: AppHandle<Wry>) -> Result<(), TakeTokError> {
+    if let Some(window) = app.get_window("main") {
+        if window.is_devtools_open() {
+            window.close_devtools();
+        } else {
+            window.open_devtools();
+        }
+    }
     Ok(())
 }
