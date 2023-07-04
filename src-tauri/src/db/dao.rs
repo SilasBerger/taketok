@@ -1,5 +1,5 @@
 use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use crate::db::db_models::AuthorInfo;
+use crate::db::db_models::{AuthorInfo, Hashtag};
 use crate::error::TakeTokError;
 use crate::models::{ImportResponseAuthor, ImportResponseVideo};
 
@@ -65,6 +65,32 @@ pub fn save_video_metadata(conn: &mut SqliteConnection, video_data: &ImportRespo
     Ok(())
 }
 
+pub fn insert_hashtags(conn: &mut SqliteConnection, video_id: &str, hashtags: &Vec<String>) -> Result<(), TakeTokError> {
+    use crate::db::schema::hashtag;
+    use crate::db::schema::video_hashtag_rel;
+
+    for hashtag_to_insert in hashtags {
+        insert_or_ignore_into(hashtag::dsl::hashtag)
+            .values(hashtag::name.eq(hashtag_to_insert))
+            .execute(conn)?;
+
+        let hashtag_id = hashtag::dsl::hashtag
+            .select(Hashtag::as_select())
+            .filter(hashtag::name.eq(hashtag_to_insert))
+            .first(conn)?
+            .id;
+
+        insert_or_ignore_into(video_hashtag_rel::dsl::video_hashtag_rel)
+            .values((
+                video_hashtag_rel::video_id.eq(video_id),
+                video_hashtag_rel::hashtag_id.eq(hashtag_id),
+            ))
+            .execute(conn)?;
+    }
+
+    Ok(())
+}
+
 pub fn insert_transcript(conn: &mut SqliteConnection, video_id: &str, transcript: &str) -> Result<(), TakeTokError> {
     use crate::db::schema::video;
 
@@ -72,6 +98,6 @@ pub fn insert_transcript(conn: &mut SqliteConnection, video_id: &str, transcript
         .filter(video::id.eq(video_id))
         .set(video::transcript.eq(transcript))
         .execute(conn)?;
-    
+
     Ok(())
 }

@@ -27,7 +27,7 @@ diesel::table! {
 
 diesel::table! {
     hashtag (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
     }
 }

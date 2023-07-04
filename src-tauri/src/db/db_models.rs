@@ -33,7 +33,7 @@ pub struct Challenge {
 #[derive(Selectable, Queryable, Debug, Identifiable, Insertable)]
 #[diesel(table_name = crate::db::schema::hashtag)]
 pub struct Hashtag {
-    pub id: Option<i32>,
+    pub id: i32,
     pub name: String,
 }
 
