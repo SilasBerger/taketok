@@ -1,13 +1,5 @@
-use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-
-#[derive(Queryable, Selectable, Serialize, Debug)]
-#[diesel(table_name = crate::schema::source_url)]
-pub struct SourceUrl {
-    pub url: String,
-    pub processed: i32,
-    pub failure_reason: Option<String>,
-}
+use crate::db::db_models::{AuthorInfo, Challenge, Hashtag, Video};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
@@ -66,13 +58,13 @@ pub struct ImportResponseAuthor {
     pub id: String,
 
     #[serde(rename = "uniqueId")]
-    pub unique_id: String,
+    pub unique_id: Option<String>,
 
-    pub nickname: String,
+    pub nickname: Option<String>,
 
-    pub signature: String,
+    pub signature: Option<String>,
 
-    pub date: String,
+    pub date: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -80,4 +72,11 @@ pub struct ImportResponseChallenge {
     pub id: String,
     pub title: String,
     pub description: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct VideoFullInfo {
+    pub video: Video,
+    pub author: AuthorInfo,
+    pub hashtags: Vec<String>,
 }

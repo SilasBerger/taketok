@@ -27,7 +27,7 @@ diesel::table! {
 
 diesel::table! {
     hashtag (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
     }
 }
@@ -49,11 +49,11 @@ diesel::table! {
 diesel::table! {
     video (id) {
         id -> Text,
-        resolved_url -> Nullable<Text>,
+        resolved_url -> Text,
         download_date_iso -> Nullable<Text>,
         description -> Nullable<Text>,
         upload_date_iso -> Nullable<Text>,
-        author_id -> Nullable<Text>,
+        author_id -> Text,
         transcript -> Nullable<Text>,
     }
 }

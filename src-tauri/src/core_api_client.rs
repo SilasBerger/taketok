@@ -1,10 +1,11 @@
+#![allow(unused)]
+
 use std::ops::Mul;
-use std::path::PathBuf;
 use std::time::Duration;
 use serde::{Deserialize, Serialize};
 use crate::core_api_client::OpMode::{Live, Mock};
 use crate::error::TakeTokError;
-use crate::models::{ImportRequest, ImportResponse, ImportResponseVideo, TranscriptRequest, TranscriptResponse};
+use crate::models::{ImportRequest, ImportResponse, TranscriptRequest, TranscriptResponse};
 use crate::path_utils::mock_api_data_file;
 use crate::utils::read_as_json;
 
@@ -106,7 +107,10 @@ impl CoreApiClientMock {
 
         match matching_entry {
             Some(entry) => {
-                Ok(entry.entry.clone().expect("Unable to clone mock data entry"))
+                match &entry.entry {
+                    Some(response) => Ok(response.clone()),
+                    None => Err(TakeTokError::General("This is a fake error for that entry".to_string()))
+                }
             }
             None => Err(TakeTokError::General("No entry found".to_string()))
         }

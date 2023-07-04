@@ -5,12 +5,7 @@ import "./App.css";
 function App() {
 
   const [sourceUrls, setSourceUrls] = createSignal<SourceUrl[]>([]);
-  const [
-    videosDict,
-    setVideosDict
-  ] = createSignal<{[key: string]: ImportResponse}>({});
-
-  const videos = () => Object.values(videosDict());
+  const [videoData, setVideoData] = createSignal<VideoFullInfo[]>([])
 
   interface SourceUrl {
     url: string,
@@ -24,15 +19,7 @@ function App() {
       downloadDateIso: string,
       description: string,
       uploadDateIso: string,
-      hashtags: string[],
-      challenges: Challenge[],
       transcript?: string,
-  }
-
-  interface Challenge {
-     id: string,
-     title: string,
-     description: string,
   }
 
   interface Author {
@@ -43,31 +30,38 @@ function App() {
     date: string,
   }
 
-  interface ImportResponse {
+  interface VideoFullInfo {
     video: Video,
     author: Author,
-  }
-
-  async function requestTranscript(videoId: string) {
-    const transcript: string = await invoke("request_transcript", {videoId});
-    const nextVideosDict = {...videosDict()};
-    const oldVideo = nextVideosDict[videoId];
-    nextVideosDict[videoId] = {
-      ...oldVideo,
-      video: {...oldVideo.video, transcript: transcript},
-    };
-    setVideosDict(nextVideosDict);
+    hashtags: string[]
   }
 
   async function requestImport(sourceUrl: string) {
-    const result: ImportResponse = await invoke("import_from_source_url", {sourceUrl});
-    const nextVideosDict = {...videosDict()};
-    nextVideosDict[result.video.id] = result
-    setVideosDict(nextVideosDict)
+    try {
+      await invoke("import_from_source_url", {sourceUrl});
+      setVideoData(await invoke("get_all_video_data", {}));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function registerToggleDevtoolsKeyboardTrigger() {
+    // TODO: Not very nice, refactor at some point...
+    window.onkeyup = async (event) => {
+      if (event.key == 'F12') {
+        try {
+          await invoke("toggle_devtools", {});
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   }
 
   onMount(async () => {
     setSourceUrls(await invoke("fetch_source_urls", {}));
+    setVideoData(await invoke("get_all_video_data", {}));
+    registerToggleDevtoolsKeyboardTrigger();
   })
 
   return (
@@ -112,25 +106,17 @@ function App() {
         </tr>
         </thead>
         <tbody>
-        <For each={videos()}>{(video: ImportResponse) =>
+        <For each={videoData()}>{(video_info: VideoFullInfo) =>
           <tr>
-            <td class="table-border px-2 py-1">{video.video.id}</td>
-            <td class="table-border px-2 py-1">{video.video.resolvedUrl}</td>
-            <td class="table-border px-2 py-1">{video.video.downloadDateIso}</td>
-            <td class="table-border px-2 py-1">{video.video.uploadDateIso}</td>
-            <td class="table-border px-2 py-1">{video.video.hashtags.join(', ')}</td>
-            <td class="table-border px-2 py-1">{video.author.uniqueId}</td>
-            <td class="table-border px-2 py-1">{video.author.nickname}</td>
-            <td class="table-border px-2 py-1">{video.author.signature}</td>
-            <td class="table-border px-2 py-1">
-              <Show
-                when={video.video.transcript}
-                fallback={
-                  <button class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
-                        onClick={() => requestTranscript(video.video.id)}>Transcribe</button>}>
-                <div>{video.video.transcript}</div>
-              </Show>
-            </td>
+            <td class="table-border px-2 py-1">{video_info.video.id}</td>
+            <td class="table-border px-2 py-1">{video_info.video.resolvedUrl}</td>
+            <td class="table-border px-2 py-1">{video_info.video.downloadDateIso}</td>
+            <td class="table-border px-2 py-1">{video_info.video.uploadDateIso}</td>
+            <td class="table-border px-2 py-1">{video_info.hashtags.join(', ')}</td>
+            <td class="table-border px-2 py-1">{video_info.video.transcript}</td>
+            <td class="table-border px-2 py-1">{video_info.author.uniqueId}</td>
+            <td class="table-border px-2 py-1">{video_info.author.nickname}</td>
+            <td class="table-border px-2 py-1">{video_info.author.signature}</td>
           </tr>
         }</For>
         </tbody>
