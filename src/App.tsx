@@ -49,21 +49,27 @@ function App() {
   }
 
   async function requestTranscript(videoId: string) {
-    const transcript: string = await invoke("request_transcript", {videoId});
-    const nextVideosDict = {...videosDict()};
-    const oldVideo = nextVideosDict[videoId];
-    nextVideosDict[videoId] = {
-      ...oldVideo,
-      video: {...oldVideo.video, transcript: transcript},
-    };
-    setVideosDict(nextVideosDict);
+    try {
+      const transcript: string = await invoke("request_transcript", {videoId});
+      const nextVideosDict = {...videosDict()};
+      const oldVideo = nextVideosDict[videoId];
+      nextVideosDict[videoId] = {
+        ...oldVideo,
+        video: {...oldVideo.video, transcript: transcript},
+      };
+      setVideosDict(nextVideosDict);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async function requestImport(sourceUrl: string) {
-    const result: ImportResponse = await invoke("import_from_source_url", {sourceUrl});
-    const nextVideosDict = {...videosDict()};
-    nextVideosDict[result.video.id] = result
-    setVideosDict(nextVideosDict)
+    try {
+      const result: ImportResponse = await invoke("import_from_source_url", {sourceUrl});
+      console.log('Success!');
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   onMount(async () => {

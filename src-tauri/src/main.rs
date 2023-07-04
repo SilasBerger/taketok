@@ -16,10 +16,11 @@ mod commands;
 mod state;
 mod config;
 mod utils;
+mod dao;
 
 fn main() {
-    let config = Config::load(config_file("default"))
-        .expect("Unable to load config 'default'");
+    let config = Config::load(config_file("dev"))
+        .expect("Unable to load config 'dev'");
 
     let core_api_client = CoreApiClient::mock("default");
 

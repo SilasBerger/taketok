@@ -9,6 +9,12 @@ pub struct SourceUrl {
     pub failure_reason: Option<String>,
 }
 
+#[derive(Insertable, Debug)]
+#[diesel(table_name = crate::schema::author)]
+pub struct Author {
+    pub id: String
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
     #[serde(rename = "videoId")]
