@@ -64,13 +64,6 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
         Ok(())
     })?;
 
-    /*
-    As transaction:
-    - insert hashtags
-    - insert challenges
-    (- mark source URL as processed)
-     */
-
     Ok(())
 }
 
