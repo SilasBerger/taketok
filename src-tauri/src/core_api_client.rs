@@ -106,7 +106,10 @@ impl CoreApiClientMock {
 
         match matching_entry {
             Some(entry) => {
-                Ok(entry.entry.clone().expect("Unable to clone mock data entry"))
+                match &entry.entry {
+                    Some(response) => Ok(response.clone()),
+                    None => Err(TakeTokError::General("This is a fake error for that entry".to_string()))
+                }
             }
             None => Err(TakeTokError::General("No entry found".to_string()))
         }
