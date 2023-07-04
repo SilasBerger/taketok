@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use crate::db::db_models::{AuthorInfo, Challenge, Hashtag, Video};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
@@ -71,4 +72,11 @@ pub struct ImportResponseChallenge {
     pub id: String,
     pub title: String,
     pub description: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct VideoFullInfo {
+    pub video: Video,
+    pub author: AuthorInfo,
+    pub hashtags: Vec<String>,
 }

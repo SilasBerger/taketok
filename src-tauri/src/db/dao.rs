@@ -1,7 +1,7 @@
 use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
-use crate::db::db_models::{AuthorInfo, Hashtag};
+use crate::db::db_models::{AuthorInfo, Hashtag, Video};
 use crate::error::TakeTokError;
-use crate::models::{ImportResponseAuthor, ImportResponseChallenge, ImportResponseVideo};
+use crate::models::{ImportResponseAuthor, ImportResponseChallenge, ImportResponseVideo, VideoFullInfo};
 
 pub fn insert_author_if_not_exists(conn: &mut SqliteConnection, author_id: &str) -> Result<(), TakeTokError> {
     use crate::db::schema::author::dsl::author;
@@ -124,4 +124,39 @@ pub fn insert_transcript(conn: &mut SqliteConnection, video_id: &str, transcript
         .execute(conn)?;
 
     Ok(())
+}
+
+pub fn load_all_video_data(conn: &mut SqliteConnection) -> Result<Vec<VideoFullInfo>, TakeTokError> {
+    use crate::db::schema::video;
+    use crate::db::schema::author_info;
+    use crate::db::schema::video_hashtag_rel;
+    use crate::db::schema::hashtag;
+
+    let mut result = vec![];
+
+    let videos = video::dsl::video
+        .select(Video::as_select())
+        .load(conn)?;
+
+    for loaded_video in videos {
+        let author = author_info::dsl::author_info
+            .select(AuthorInfo::as_select())
+            .filter(author_info::author_id.eq(&loaded_video.author_id))
+            .order_by(author_info::date.desc())
+            .first(conn)?;
+
+        let hashtags: Vec<String> = video_hashtag_rel::dsl::video_hashtag_rel
+            .inner_join(hashtag::dsl::hashtag)
+            .select(hashtag::name)
+            .filter(video_hashtag_rel::video_id.eq(&loaded_video.id))
+            .load(conn)?;
+
+        result.push(VideoFullInfo {
+            video: loaded_video,
+            author,
+            hashtags,
+        });
+    }
+
+    Ok(result)
 }

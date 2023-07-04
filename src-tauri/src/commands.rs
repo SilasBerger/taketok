@@ -1,9 +1,10 @@
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper};
 use tauri::{AppHandle, Manager, State, Wry};
-use crate::db::dao::{insert_author_if_not_exists, insert_challenges, insert_hashtags, insert_transcript, save_video_metadata, update_author_info_if_changed};
+use crate::db::dao::{insert_author_if_not_exists, insert_challenges, insert_hashtags, insert_transcript, load_all_video_data, save_video_metadata, update_author_info_if_changed};
 use crate::db::db_models::SourceUrl;
 use crate::error::TakeTokError;
 use crate::db::schema;
+use crate::models::VideoFullInfo;
 use crate::state::TakeTokState;
 use crate::utils::connect_to_db;
 
@@ -83,4 +84,10 @@ pub async fn toggle_devtools(app: AppHandle<Wry>) -> Result<(), TakeTokError> {
         }
     }
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_all_video_data() -> Result<Vec<VideoFullInfo>, TakeTokError> {
+    let mut db_connection = connect_to_db("dev")?;
+    load_all_video_data(&mut db_connection)
 }
