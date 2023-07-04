@@ -1,6 +1,6 @@
 use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper};
 use tauri::{AppHandle, Manager, State, Wry};
-use crate::db::dao::{insert_author_if_not_exists, insert_hashtags, insert_transcript, save_video_metadata, update_author_info_if_changed};
+use crate::db::dao::{insert_author_if_not_exists, insert_challenges, insert_hashtags, insert_transcript, save_video_metadata, update_author_info_if_changed};
 use crate::db::db_models::SourceUrl;
 use crate::error::TakeTokError;
 use crate::db::schema;
@@ -49,6 +49,7 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
         update_author_info_if_changed(&mut conn, &author)?;
         save_video_metadata(&mut conn, &video, &author.id)?;
         insert_hashtags(&mut conn, video_id, &video.hashtags)?;
+        insert_challenges(&mut conn, video_id, &video.challenges)?;
         Ok(())
     })?;
 

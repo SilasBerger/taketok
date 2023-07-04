@@ -1,7 +1,7 @@
 use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
 use crate::db::db_models::{AuthorInfo, Hashtag};
 use crate::error::TakeTokError;
-use crate::models::{ImportResponseAuthor, ImportResponseVideo};
+use crate::models::{ImportResponseAuthor, ImportResponseChallenge, ImportResponseVideo};
 
 pub fn insert_author_if_not_exists(conn: &mut SqliteConnection, author_id: &str) -> Result<(), TakeTokError> {
     use crate::db::schema::author::dsl::author;
@@ -84,6 +84,30 @@ pub fn insert_hashtags(conn: &mut SqliteConnection, video_id: &str, hashtags: &V
             .values((
                 video_hashtag_rel::video_id.eq(video_id),
                 video_hashtag_rel::hashtag_id.eq(hashtag_id),
+            ))
+            .execute(conn)?;
+    }
+
+    Ok(())
+}
+
+pub fn insert_challenges(conn: &mut SqliteConnection, video_id: &str, challenges: &Vec<ImportResponseChallenge>) -> Result<(), TakeTokError> {
+    use crate::db::schema::challenge;
+    use crate::db::schema::video_challenge_rel;
+
+    for challenge_to_insert in challenges {
+        insert_or_ignore_into(challenge::dsl::challenge)
+            .values((
+                challenge::id.eq(&challenge_to_insert.id),
+                challenge::title.eq(&challenge_to_insert.title),
+                challenge::description.eq(&challenge_to_insert.description),
+            ))
+            .execute(conn)?;
+
+        insert_or_ignore_into(video_challenge_rel::dsl::video_challenge_rel)
+            .values((
+                video_challenge_rel::video_id.eq(video_id),
+                video_challenge_rel::challenge_id.eq(&challenge_to_insert.id),
             ))
             .execute(conn)?;
     }
