@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use std::ops::Mul;
 use std::time::Duration;
 use serde::{Deserialize, Serialize};

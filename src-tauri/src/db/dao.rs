@@ -1,14 +1,13 @@
-use diesel::{ExpressionMethods, OptionalExtension, QueryDsl, QueryResult, RunQueryDsl, SelectableHelper, SqliteConnection};
-use diesel::internal::derives::multiconnection::SelectStatementAccessor;
+use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
 use crate::db::db_models::AuthorInfo;
 use crate::error::TakeTokError;
-use crate::models::{ImportResponseAuthor};
+use crate::models::{ImportResponseAuthor, ImportResponseVideo};
 
 pub fn insert_author_if_not_exists(conn: &mut SqliteConnection, author_id: &str) -> Result<(), TakeTokError> {
     use crate::db::schema::author::dsl::author;
     use crate::db::schema::author::id;
 
-    diesel::insert_or_ignore_into(author)
+    insert_or_ignore_into(author)
         .values((id.eq(author_id)))
         .execute(conn)?;
     Ok(())
@@ -36,13 +35,30 @@ pub fn update_author_info_if_changed(conn: &mut SqliteConnection, author_data: &
         return Ok(())
     }
 
-    diesel::insert_into(author_info::dsl::author_info)
+    insert_into(author_info::dsl::author_info)
         .values((
             author_info::author_id.eq(&author_data.id),
             author_info::unique_id.eq(&author_data.unique_id),
             author_info::nickname.eq(&author_data.nickname),
             author_info::signature.eq(&author_data.signature),
             author_info::date.eq(&author_data.date),
+        ))
+        .execute(conn)?;
+
+    Ok(())
+}
+
+pub fn save_video_metadata(conn: &mut SqliteConnection, video_data: &ImportResponseVideo, author_id: &str) -> Result<(), TakeTokError> {
+    use crate::db::schema::video;
+
+    insert_into(video::dsl::video)
+        .values((
+            video::id.eq(&video_data.id),
+            video::resolved_url.eq(&video_data.resolved_url),
+            video::download_date_iso.eq(&video_data.download_date_iso),
+            video::description.eq(&video_data.description),
+            video::upload_date_iso.eq(&video_data.upload_date_iso),
+            video::author_id.eq(author_id),
         ))
         .execute(conn)?;
 
