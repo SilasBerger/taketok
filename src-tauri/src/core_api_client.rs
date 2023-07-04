@@ -1,8 +1,12 @@
 use std::ops::Mul;
+use std::path::PathBuf;
 use std::time::Duration;
+use serde::{Deserialize, Serialize};
 use crate::core_api_client::OpMode::{Live, Mock};
 use crate::error::TakeTokError;
 use crate::models::{ImportRequest, ImportResponse, ImportResponseVideo, TranscriptRequest, TranscriptResponse};
+use crate::path_utils::mock_api_data_file;
+use crate::utils::read_as_json;
 
 pub struct CoreApiClient {
     op_mode: OpMode,
@@ -20,9 +24,13 @@ impl CoreApiClient {
         }
     }
 
-    pub fn mock() -> Self {
+    pub fn mock(data_file_name: &str) -> Self {
+        let data_file_path = mock_api_data_file(data_file_name);
+        let mock_data = read_as_json(&data_file_path)
+            .expect(&format!("Unable to read mock data from path: {:?}", &data_file_path));
+
         Self {
-            op_mode: Mock(CoreApiClientMock {})
+            op_mode: Mock(CoreApiClientMock { mock_data })
         }
     }
 
@@ -42,7 +50,6 @@ impl CoreApiClient {
 }
 
 struct CoreApiClientImpl {
-
 }
 
 impl CoreApiClientImpl {
@@ -88,15 +95,54 @@ impl CoreApiClientImpl {
 }
 
 struct CoreApiClientMock {
-
+    mock_data: CoreApiMockData
 }
 
 impl CoreApiClientMock {
-    fn get_fake_transcript(&self, video_id: &str) -> Result<String, TakeTokError> {
-        Ok(format!("This is not the greatest code in the world, this is just a transcript for video {}.", video_id))
+    fn get_fake_video_metadata(&self, source_url: &str) -> Result<ImportResponse, TakeTokError> {
+        let matching_entry = &self.mock_data.video_metadata
+            .iter()
+            .find(|&entry| entry.source_url.eq(source_url));
+
+        match matching_entry {
+            Some(entry) => {
+                Ok(entry.entry.clone().expect("Unable to clone mock data entry"))
+            }
+            None => Err(TakeTokError::General("No entry found".to_string()))
+        }
     }
 
-    fn get_fake_video_metadata(&self, source_url: &str) -> Result<ImportResponse, TakeTokError> {
-        Err(TakeTokError::General(format!("Not yet implemented")))
+    fn get_fake_transcript(&self, video_id: &str) -> Result<String, TakeTokError> {
+        let matching_entry = &self.mock_data.transcripts
+            .iter()
+            .find(|&entry| entry.video_id.eq(video_id));
+
+        match matching_entry {
+            Some(entry) => {
+                Ok(entry.entry.transcript.to_string())
+            }
+            None => Err(TakeTokError::General("No transcript found".to_string()))
+        }
     }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct CoreApiMockImportResponseEntry {
+    #[serde(rename = "sourceUrl")]
+    pub source_url: String,
+    pub entry: Option<ImportResponse>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct CoreApiMockTranscriptEntry {
+    #[serde(rename = "videoId")]
+    pub video_id: String,
+    pub entry: TranscriptResponse,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct CoreApiMockData {
+    #[serde(rename = "videoMetadata")]
+    pub video_metadata: Vec<CoreApiMockImportResponseEntry>,
+    pub transcripts: Vec<CoreApiMockTranscriptEntry>
 }

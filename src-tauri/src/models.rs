@@ -21,7 +21,7 @@ pub struct TranscriptRequest {
     pub whisper_model: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TranscriptResponse {
     pub transcript: String,
 }
@@ -35,13 +35,13 @@ pub struct ImportRequest {
     pub video_output_dir: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ImportResponse {
     pub video: ImportResponseVideo,
     pub author: ImportResponseAuthor,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ImportResponseVideo {
     pub id: String,
 
@@ -61,7 +61,7 @@ pub struct ImportResponseVideo {
     pub challenges: Vec<ImportResponseChallenge>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ImportResponseAuthor {
     pub id: String,
 
@@ -75,7 +75,7 @@ pub struct ImportResponseAuthor {
     pub date: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ImportResponseChallenge {
     pub id: String,
     pub title: String,

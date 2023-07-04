@@ -1,8 +1,7 @@
-use std::fs::File;
-use std::io::BufReader;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use crate::error::TakeTokError;
+use crate::utils::read_as_json;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
@@ -15,8 +14,6 @@ pub struct Config {
 
 impl Config {
     pub fn load(config_path: PathBuf) -> Result<Self, TakeTokError> {
-        let file = File::open(config_path)?;
-        let reader = BufReader::new(file);
-        Ok(serde_json::from_reader(reader)?)
+        read_as_json(&config_path)
     }
 }
