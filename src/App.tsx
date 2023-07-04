@@ -66,6 +66,11 @@ function App() {
 
   return (
     <div class="flex flex-col items-center justify-start max-w-full m-7">
+
+      <video width="400" controls={true} preload="metadata" poster={'http://127.0.0.1:5000/thumbnail/dev/7193720678988746026'}>
+        <source src="http://127.0.0.1:5000/video/dev/7193720678988746026" type="video/mp4" />
+      </video>
+
       <table class="table-auto table-border">
         <thead>
           <tr class="table-border">

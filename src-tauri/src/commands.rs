@@ -20,23 +20,21 @@ pub fn fetch_source_urls() -> Result<Vec<SourceUrl>, TakeTokError> {
 
 #[tauri::command]
 pub async fn request_transcript(state: State<'_, TakeTokState>, video_id: String) -> Result<String, TakeTokError> {
-    let video_output_dir = &state.config.video_output_dir;
     let whisper_model = &state.config.whisper_model;
     let result = state
         .core_api_client
-        .request_transcript(&video_id, video_output_dir, whisper_model)
+        .request_transcript(&video_id, "default", whisper_model)
         .await?;
     Ok(result)
 }
 
 #[tauri::command]
 pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTokState>) -> Result<(), TakeTokError> {
-    let video_output_dir = &state.config.video_output_dir;
     let mut db_connection = connect_to_db("dev")?;
 
     let import_response = state
         .core_api_client
-        .import_from_source_url(&source_url, &video_output_dir)
+        .import_from_source_url(&source_url, "dev")
         .await?;
 
     let video = import_response.video;
@@ -56,7 +54,7 @@ pub async fn import_from_source_url(source_url: String, state: State<'_, TakeTok
 
     let transcript = state
         .core_api_client
-        .request_transcript(video_id, &state.config.video_output_dir, &state.config.whisper_model)
+        .request_transcript(video_id, "default", &state.config.whisper_model)
         .await?;
 
     db_connection.transaction::<(), TakeTokError, _>(| mut conn| {
