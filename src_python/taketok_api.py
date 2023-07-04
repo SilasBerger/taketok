@@ -1,4 +1,5 @@
 import traceback
+import json
 
 from flask import Flask, request
 from controller.data_import_controller import download_video
@@ -14,7 +15,9 @@ def import_from_source_url():
     try:
         source_url = payload['sourceUrl']
         video_out_dir = as_path(payload['videoOutputDir'])
-        return download_video(source_url, video_out_dir), 200
+        response = download_video(source_url, video_out_dir)
+        print(json.dumps({"source_url": source_url, "response": response}, indent=2))
+        return response, 200
     except Exception:
         stack_trace = traceback.format_exc()
         print(stack_trace)
@@ -28,4 +31,6 @@ def transcribe():
     video_output_dir = as_path(payload['videoOutputDir'])
     whisper_model = payload['whisperModel']
     transcript = transcribe_video(video_id, video_output_dir, whisper_model)
-    return {'transcript': transcript}, 200
+    response = {'transcript': transcript}
+    print(json.dumps({"video_id": video_id, "response": response}, indent=2))
+    return response, 200

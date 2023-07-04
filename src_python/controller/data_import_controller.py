@@ -36,10 +36,10 @@ def download_video(source_url: str, video_out_dir: pathlib.Path):
     return {
         'video': {
             "id": video_id,
-            "resolved_url": resolved_url,
-            "download_date_iso": current_date_iso,
+            "resolvedUrl": resolved_url,
+            "downloadDateIso": current_date_iso,
             "description": info['desc'],
-            "upload_date_iso": datetime.datetime.utcfromtimestamp(info['createTime']).isoformat(),
+            "uploadDateIso": datetime.datetime.utcfromtimestamp(info['createTime']).isoformat(),
             'hashtags': _extract_hashtags(info),
             'challenges': _extract_challenges(info)
         },

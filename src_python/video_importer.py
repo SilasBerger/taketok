@@ -15,8 +15,8 @@ class VideoImporter:
 
     def _import_video_metadata(self, source_url: str, transaction):
         response = requests.post('http://127.0.0.1:5000/import-from-source-url', json={
-            "sourceUrl" : source_url,
-            "videoOutputDir": str(self._video_out_dir)
+            "source_url": source_url,
+            "video_output_dir": str(self._video_out_dir)
         })
 
         if response.status_code != 200:
@@ -31,7 +31,7 @@ class VideoImporter:
         transaction.save_author_if_not_exists(author_id)
         transaction.update_author_info_if_changed(
             author_id,
-            author['uniqueId'],
+            author['unique_id'],
             author['nickname'],
             author['signature'],
             author['date'],
@@ -54,9 +54,9 @@ class VideoImporter:
 
     def _import_transcript(self, video_id):
         response = requests.post('http://127.0.0.1:5000/transcribe', json={
-            "videoId" : video_id,
-            "videoOutputDir": str(self._video_out_dir),
-            "whisperModel": self._whisper_model
+            "video_id": video_id,
+            "video_output_dir": str(self._video_out_dir),
+            "whisper_model": self._whisper_model
         })
 
         if response.status_code != 200:
