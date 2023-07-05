@@ -16,7 +16,7 @@ function PageCarousel() {
 
   return (
     <div class="w-full flex flex-col justify-start">
-      <Navbar setCurrentPage={setCurrentPage} />
+      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <Show when={currentPage() == Page.LIBRARY}>
         <LibraryPage videoData={videoData} loadVideoData={loadVideoData} />
       </Show>

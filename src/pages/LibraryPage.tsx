@@ -28,7 +28,7 @@ function LibraryPage({videoData, loadVideoData}: {videoData: () => VideoFullInfo
 
       <div class="grid gap-10
                   grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6
-                  px-10 my-10">
+                  px-10 mb-10 mt-20">
         <For each={videoData()}>{(video_info: VideoFullInfo) =>
           <div class="rounded-2xl relative overflow-hidden cursor-pointer shadow-lg" onclick={() => playVideo(video_info.video.id)}>
             <img width="100%" src={`http://127.0.0.1:5000/thumbnail/dev/${video_info.video.id}`} />
