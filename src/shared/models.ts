@@ -15,7 +15,7 @@ export interface Video {
 
 export interface Author {
   id: string,
-  uniqueId: string,
+  unique_id: string, /* TODO: This is because we receive the DB model and it's not serde-renamed, fix */
   nickname: string,
   signature: string,
   date: string,

@@ -40,7 +40,7 @@ function LibraryPage({videoData, loadVideoData}: {videoData: Accessor<[VideoFull
                         hover:backdrop-blur-md w-full transition-all">
               <div class="stretch block p-4 overflow-hidden">{videoInfo.video.transcript}</div>
               <div class="text-right py-1 px-4 text-sm">
-                by <span class="text-blue-500 font-bold">@{videoInfo.author.nickname}</span>
+                by <span class="text-blue-500 font-bold">@{videoInfo.author.unique_id}</span>
               </div>
             </div>
           </div>
