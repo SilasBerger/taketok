@@ -1,15 +1,15 @@
 import {createSignal, For, onMount} from "solid-js";
 import {invoke} from "@tauri-apps/api/tauri";
-import {SourceUrl} from "../shared/models";
+import {SourceUrl, VideoFullInfo} from "../shared/models";
 
-function DownloadPage() {
+function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
 
   const [sourceUrls, setSourceUrls] = createSignal<SourceUrl[]>([]);
 
   async function requestImport(sourceUrl: string) {
     try {
       await invoke("import_from_source_url", {sourceUrl});
-      // TODO: setVideoData(await invoke("get_all_video_data", {}));
+      await loadVideoData();
     } catch (e) {
       console.log(e);
     }
@@ -47,4 +47,4 @@ function DownloadPage() {
   );
 }
 
-export default DownloadPage;
+export default ImportPage;

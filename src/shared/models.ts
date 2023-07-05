@@ -29,5 +29,5 @@ export interface VideoFullInfo {
 
 export enum Page {
   LIBRARY = "Library",
-  DOWNLOADS = "Downloads",
+  IMPORT = "Import",
 }

@@ -1,5 +1,7 @@
-use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
+use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection, update};
 use crate::db::db_models::{AuthorInfo, Hashtag, Video};
+use crate::db::schema;
+use crate::db::schema::source_url::dsl::source_url;
 use crate::error::TakeTokError;
 use crate::models::{ImportResponseAuthor, ImportResponseChallenge, ImportResponseVideo, VideoFullInfo};
 
@@ -159,4 +161,15 @@ pub fn load_all_video_data(conn: &mut SqliteConnection) -> Result<Vec<VideoFullI
     }
 
     Ok(result)
+}
+
+pub fn mark_source_as_processed(conn: &mut SqliteConnection, processed_source_url: &str) -> Result<(), TakeTokError> {
+    use crate::db::schema::source_url;
+    
+    update(source_url)
+        .filter(source_url::url.eq(processed_source_url))
+        .set(source_url::processed.eq(1))
+        .execute(conn)?;
+        
+    Ok(())
 }

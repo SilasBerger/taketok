@@ -1,16 +1,14 @@
 import {createSignal, For, onMount, Show} from "solid-js";
-import {invoke} from "@tauri-apps/api/tauri";
 import {VideoFullInfo} from "../shared/models";
 import VideoOverlay from "../components/PageCarousel/VideoOverlay";
 
-function LibraryPage() {
+function LibraryPage({videoData, loadVideoData}: {videoData: () => VideoFullInfo[], loadVideoData: () => Promise<void>}) {
 
-  const [videoData, setVideoData] = createSignal<VideoFullInfo[]>([])
   const [playingVideo, setPlayingVideo] = createSignal<string>();
 
   onMount(async () => {
-    setVideoData(await invoke("get_all_video_data", {}));
-  })
+    await loadVideoData();
+  });
 
   function playVideo(videoId: string) {
     setPlayingVideo(videoId);
@@ -28,10 +26,15 @@ function LibraryPage() {
         <VideoOverlay videoId={playingVideo() as string} onClose={closeOverlay} />
       </Show>
 
-      <div class="grid grid-cols-4 grid-rows-max bg-amber-50">
+      <div class="grid gap-10
+                  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6
+                  px-10 mt-10">
         <For each={videoData()}>{(video_info: VideoFullInfo) =>
-          <div class="rounded-2xl overflow-hidden cursor-pointer p-1 bg-purple-200" onclick={() => playVideo(video_info.video.id)}>
+          <div class="rounded-2xl relative overflow-hidden cursor-pointer shadow-lg" onclick={() => playVideo(video_info.video.id)}>
             <img width="100%" src={`http://127.0.0.1:5000/thumbnail/dev/${video_info.video.id}`} />
+            <div class="bg-gray-100 bg-opacity-60 hover:backdrop-blur-md w-full h-full absolute top-0 z-10 transition-all">
+              This is the description
+            </div>
           </div>
         }</For>
       </div>

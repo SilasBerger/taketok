@@ -16,7 +16,6 @@ def import_from_source_url():
         source_url = payload['sourceUrl']
         config_name = payload['configName']
         response = download_video(source_url, config_name)
-        print(json.dumps({"source_url": source_url, "response": response}, indent=2))
         return response, 200
     except Exception:
         stack_trace = traceback.format_exc()
@@ -32,7 +31,6 @@ def transcribe():
     whisper_model = payload['whisperModel']
     transcript = transcribe_video(video_id, configName, whisper_model)
     response = {'transcript': transcript}
-    print(json.dumps({"video_id": video_id, "response": response}, indent=2))
     return response, 200
 
 
