@@ -28,11 +28,13 @@ function LibraryPage() {
         <VideoOverlay videoId={playingVideo() as string} onClose={closeOverlay} />
       </Show>
 
-      <For each={videoData()}>{(video_info: VideoFullInfo) =>
-        <div class="rounded-2xl w-1/6 overflow-hidden cursor-pointer" onclick={() => playVideo(video_info.video.id)}>
-          <img width="100%" src={`http://127.0.0.1:5000/thumbnail/dev/${video_info.video.id}`} />
-        </div>
-      }</For>
+      <div class="grid grid-cols-4 grid-rows-max bg-amber-50">
+        <For each={videoData()}>{(video_info: VideoFullInfo) =>
+          <div class="rounded-2xl overflow-hidden cursor-pointer p-1 bg-purple-200" onclick={() => playVideo(video_info.video.id)}>
+            <img width="100%" src={`http://127.0.0.1:5000/thumbnail/dev/${video_info.video.id}`} />
+          </div>
+        }</For>
+      </div>
     </div>
   );
 }

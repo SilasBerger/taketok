@@ -1,4 +1,3 @@
-import {Portal} from "solid-js/web";
 import {onMount} from "solid-js";
 
 function VideoOverlay({videoId, onClose}: {videoId: string, onClose: () => void}) {
