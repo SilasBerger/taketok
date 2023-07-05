@@ -13,7 +13,7 @@ function VideoOverlay({videoId, onClose}: {videoId: string, onClose: () => void}
   }
 
   return (
-    <div class="h-screen w-screen absolute p-16 modal backdrop-blur-xl bg-gray-400 bg-opacity-30 z-50" id="modal" onclick={handleClick}>
+    <div class="h-screen w-screen fixed p-16 modal backdrop-blur-xl bg-gray-400 bg-opacity-30 z-50" id="modal" onclick={handleClick}>
       <div class="w-full h-full rounded-xl p-10 bg-white" id="modal-content">
         <video
           width="200"
