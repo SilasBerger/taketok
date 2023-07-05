@@ -40,7 +40,7 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
         <thead>
         <tr class="table-border">
           <th class="table-border px-2 py-1">URL</th>
-          <th class="table-border px-2 py-1">Processed?</th>
+          <th class="table-border px-2 py-1">Status</th>
           <th class="table-border px-2 py-1">Interactions</th>
         </tr>
         </thead>
@@ -48,7 +48,7 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
         <For each={sourceUrls()}>{(sourceUrl: SourceUrl) =>
           <tr>
             <td class="table-border px-2 py-1">{sourceUrl.url}</td>
-            <td class="table-border px-2 py-1">{sourceUrl.processed}</td>
+            <td class="table-border px-2 py-1">{sourceUrl.processed == 0 ? 'Open' : 'Imported'}</td>
             <td class="table-border px-2 py-1">
               <button
                 class="btn-primary"

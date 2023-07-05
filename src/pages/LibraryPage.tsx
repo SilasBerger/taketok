@@ -1,8 +1,8 @@
-import {createSignal, For, onMount, Show} from "solid-js";
+import {Accessor, createSignal, For, onMount, Show} from "solid-js";
 import {VideoFullInfo} from "../shared/models";
 import VideoOverlay from "../components/PageCarousel/VideoOverlay";
 
-function LibraryPage({videoData, loadVideoData}: {videoData: () => VideoFullInfo[], loadVideoData: () => Promise<void>}) {
+function LibraryPage({videoData, loadVideoData}: {videoData: Accessor<[VideoFullInfo]>, loadVideoData: () => Promise<void>}) {
 
   const [playingVideo, setPlayingVideo] = createSignal<string>();
 
