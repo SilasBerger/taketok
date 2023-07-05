@@ -9,14 +9,19 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
   async function requestImport(sourceUrl: string) {
     try {
       await invoke("import_from_source_url", {sourceUrl});
+      await loadSourceUrls();
       await loadVideoData();
     } catch (e) {
       console.log(e);
     }
   }
 
-  onMount(async () => {
+  async function loadSourceUrls() {
     setSourceUrls(await invoke("fetch_source_urls", {}));
+  }
+
+  onMount(async () => {
+    await loadSourceUrls();
   })
 
   return (
