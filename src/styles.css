@@ -15,4 +15,8 @@ html {
   .table-border {
     @apply border-solid border-black border-2
   }
+
+  .btn-primary {
+    @apply rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150
+  }
 }

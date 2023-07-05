@@ -16,6 +16,16 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
     }
   }
 
+  async function importAll() {
+    const nonImportedUrls = sourceUrls()
+      .filter(sourceUrl => sourceUrl.processed === 0)
+      .map(sourceUrl => sourceUrl.url);
+
+    for (let nonImportedUrl of nonImportedUrls) {
+      await requestImport(nonImportedUrl);
+    }
+  }
+
   async function loadSourceUrls() {
     setSourceUrls(await invoke("fetch_source_urls", {}));
   }
@@ -25,8 +35,8 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
   })
 
   return (
-    <div>
-      <table class="table-auto table-border">
+    <div class="flex flex-column justify-center mt-20 p-10">
+      <table class="w-full table-auto table-border">
         <thead>
         <tr class="table-border">
           <th class="table-border px-2 py-1">URL</th>
@@ -41,13 +51,18 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
             <td class="table-border px-2 py-1">{sourceUrl.processed}</td>
             <td class="table-border px-2 py-1">
               <button
-                class="rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150"
-                onClick={() => requestImport(sourceUrl.url)}>Import</button>
+                class="btn-primary"
+                onClick={async () => await requestImport(sourceUrl.url)}>Import</button>
             </td>
           </tr>
         }</For>
         </tbody>
       </table>
+      <div class="absolute top-20 right-10">
+        <button
+          class="btn-primary"
+          onClick={async () => await importAll()}>Import all</button>
+      </div>
     </div>
   );
 }
