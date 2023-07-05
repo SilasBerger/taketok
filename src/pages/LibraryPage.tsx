@@ -32,7 +32,10 @@ function LibraryPage({videoData, loadVideoData}: {videoData: () => VideoFullInfo
         <For each={videoData()}>{(video_info: VideoFullInfo) =>
           <div class="rounded-2xl relative overflow-hidden cursor-pointer shadow-lg" onclick={() => playVideo(video_info.video.id)}>
             <img width="100%" src={`http://127.0.0.1:5000/thumbnail/dev/${video_info.video.id}`} />
-            <div class="bg-gray-100 bg-opacity-60 hover:backdrop-blur-md w-full h-full absolute top-0 z-10 transition-all">
+            <div class="absolute bottom-0 z-10
+                        h-1/4 hover:h-full
+                        bg-gray-100 bg-opacity-60 backdrop-blur-md
+                        hover:backdrop-blur-md w-full transition-all">
               This is the description
             </div>
           </div>
