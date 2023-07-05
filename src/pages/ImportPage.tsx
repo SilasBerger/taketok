@@ -35,34 +35,26 @@ function ImportPage({loadVideoData}: {loadVideoData: () => Promise<void>}) {
   })
 
   return (
-    <div class="flex flex-column justify-center mt-20 p-10">
-      <table class="w-full table-auto table-border">
-        <thead>
-        <tr class="table-border">
-          <th class="table-border px-2 py-1">URL</th>
-          <th class="table-border px-2 py-1">Status</th>
-          <th class="table-border px-2 py-1">Interactions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <For each={sourceUrls()}>{(sourceUrl: SourceUrl) =>
-          <tr>
-            <td class="table-border px-2 py-1">{sourceUrl.url}</td>
-            <td class="table-border px-2 py-1">{sourceUrl.processed == 0 ? 'Open' : 'Imported'}</td>
-            <td class="table-border px-2 py-1">
-              <button
-                class="btn-primary"
-                onClick={async () => await requestImport(sourceUrl.url)}>Import</button>
-            </td>
-          </tr>
-        }</For>
-        </tbody>
-      </table>
-      <div class="absolute top-20 right-10">
+    <div class="flex flex-col justify-center mt-12 p-10">
+      <div class="flex flex-row justify-end items-center mb-10">
+        <div class={`grow font-bold text-2xl`}>
+          Source URLs
+        </div>
         <button
           class="btn-primary"
           onClick={async () => await importAll()}>Import all</button>
       </div>
+
+      <For each={sourceUrls().filter(sourceUrl => sourceUrl.processed === 0)}>{(sourceUrl: SourceUrl) =>
+        <div class={`flex flex-row justify-end mb-2 bg-gray-100 rounded-xl overflow-hidden`}>
+          <div class={`grow p-5 underline`}>{sourceUrl.url}</div>
+          <div class={`flex justify-center items-center bg-green-200 hover:bg-green-300 transition:all`}>
+            <button
+              class={`block w-full h-full px-10`}
+              onclick={() => requestImport(sourceUrl.url)}>Import</button>
+          </div>
+        </div>
+      }</For>
     </div>
   );
 }
