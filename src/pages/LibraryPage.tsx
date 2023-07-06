@@ -47,7 +47,7 @@ function LibraryPage({videoData, loadVideoData}: {videoData: Accessor<[VideoFull
       <div class="px-10 mt-20">
         <input
           onInput={e => setCurrentSearch(e.target.value)}
-          class="w-full rounded-xl border border-solid border-gray-300 text-lg px-4 py-2" />
+          class="w-full rounded-3xl shadow-md border border-solid border-gray-300 text-lg px-4 py-2" />
       </div>
       <div class="grid gap-10
                   grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6
