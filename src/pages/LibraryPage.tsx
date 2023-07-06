@@ -33,6 +33,8 @@ function LibraryPage({videoData, loadVideoData}: {videoData: Accessor<[VideoFull
     return videos.filter(video => {
       return video.video.description.toLowerCase().includes(searchValue)
         || video.video.transcript?.toLowerCase().includes(searchValue)
+        || video.author.unique_id.toLowerCase().includes(searchValue)
+        || video.author.nickname?.toLowerCase().includes(searchValue)
     });
   }
 
