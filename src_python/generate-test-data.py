@@ -46,7 +46,7 @@ for line in lines:
         'videoId': video_id,
         'entry': transcript_response.json()
     })
-    imported_source_urls.append(lines)
+    imported_source_urls.append(line)
 
 with open(taketok_home() / 'mock-data.json', "w") as outfile:
     json.dump(result, outfile, indent=2)
