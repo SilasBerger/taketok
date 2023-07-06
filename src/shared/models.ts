@@ -7,9 +7,9 @@ export interface SourceUrl {
 export interface Video {
   id: string,
   resolvedUrl: string,
-  downloadDateIso: string,
+  download_date_iso: string,
   description: string,
-  uploadDateIso: string,
+  upload_date_iso: string,
   transcript?: string,
 }
 
