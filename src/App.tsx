@@ -1,10 +1,7 @@
-import {createSignal, For, onMount, Show} from "solid-js";
+import {onMount} from "solid-js";
 import {invoke} from "@tauri-apps/api/tauri";
 import "./App.css";
-import ImportPage from "./pages/ImportPage";
-import LibraryPage from "./pages/LibraryPage";
 import PageCarousel from "./components/PageCarousel/PageCarousel";
-import {Page} from "./shared/models";
 
 function App() {
 
