@@ -1,5 +1,14 @@
 import "./VideoCard.css";
-import {VideoFullInfo} from "../../shared/models";
+import {Video, VideoFullInfo} from "../../shared/models";
+
+
+function findBestInfoText(video: Video): string {
+  if (!video.transcript || video.transcript.split(" ").length < 50) {
+    return video.description;
+  }
+
+  return video.transcript;
+}
 
 function VideoCard({videoInfo, onClick}: {videoInfo: VideoFullInfo, onClick: () => void}) {
   return (
@@ -9,10 +18,12 @@ function VideoCard({videoInfo, onClick}: {videoInfo: VideoFullInfo, onClick: () 
                   absolute bottom-0 z-10
                   flex flex-col justify-end
                   overflow-hidden
-                  h-1/4
+                  h-1/3
                   bg-gray-100 bg-opacity-60 backdrop-blur-md
                   w-full transition-all">
-        <div class="stretch block p-4 overflow-hidden">{videoInfo.video.transcript}</div>
+        <div class="stretch block p-4 overflow-hidden">
+          {findBestInfoText(videoInfo.video)}
+        </div>
         <div class="text-right py-1 px-4 text-sm">
           by <span class="text-blue-500 font-bold">@{videoInfo.author.unique_id}</span>
         </div>
