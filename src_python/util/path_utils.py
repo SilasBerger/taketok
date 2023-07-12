@@ -37,3 +37,11 @@ def sqlite_file(config_name):
 
 def db_scripts_dir():
     return Path().resolve().parent / "db"
+
+
+def thumbnails_dir(config_name):
+    return _ensure_dir(taketok_home() / 'thumbs' / config_name)
+
+
+def video_output_dir(config_name):
+    return _ensure_dir(taketok_home() / 'videos' / config_name)

@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
-use crate::db::db_models::{AuthorInfo, Challenge, Hashtag, Video};
+use crate::db::db_models::{AuthorInfo, Video};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {
     #[serde(rename = "videoId")]
     pub video_id: String,
 
-    #[serde(rename = "videoOutputDir")]
-    pub video_output_dir: String,
+    #[serde(rename = "configName")]
+    pub config_name: String,
 
     #[serde(rename = "whisperModel")]
     pub whisper_model: String,
@@ -23,8 +23,8 @@ pub struct ImportRequest {
     #[serde(rename = "sourceUrl")]
     pub source_url: String,
 
-    #[serde(rename = "videoOutputDir")]
-    pub video_output_dir: String,
+    #[serde(rename = "configName")]
+    pub config_name: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

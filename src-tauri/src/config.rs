@@ -5,9 +5,6 @@ use crate::utils::read_as_json;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
-    #[serde(rename = "videoOutputDir")]
-    pub video_output_dir: String,
-
     #[serde(rename = "whisperModel")]
     pub whisper_model: String,
 }

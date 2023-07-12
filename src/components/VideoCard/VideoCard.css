@@ -1,0 +1,3 @@
+.video-card-container:hover .info-drawer {
+    @apply h-full backdrop-blur-xl
+}

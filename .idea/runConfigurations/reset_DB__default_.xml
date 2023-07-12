@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="reset DB [default]" type="DatabaseScript">
+    <script-file value="$PROJECT_DIR$/db/create_schema.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="cf807105-f021-4c85-9a01-c82315208431" />
+    <method v="2" />
+  </configuration>
+</component>

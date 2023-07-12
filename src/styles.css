@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,10 +11,15 @@
 body,
 html {
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
 @layer components {
   .table-border {
     @apply border-solid border-black border-2
+  }
+
+  .btn-primary {
+    @apply rounded-3xl px-4 py-2 bg-purple-200 hover:bg-purple-300 transition-all duration-150
   }
 }

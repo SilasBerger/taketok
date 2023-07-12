@@ -18,9 +18,10 @@ mod utils;
 mod db;
 
 fn main() {
-    let config = Config::load(config_file("dev"))
-        .expect("Unable to load config 'dev'");
+    let config = Config::load(config_file("default"))
+        .expect("Unable to load config 'default'");
 
+    // TODO: Fix hard-coded config name.
     let core_api_client = CoreApiClient::mock("default");
 
     let state = TakeTokState {

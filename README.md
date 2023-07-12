@@ -11,11 +11,12 @@ instructions are solely targeted towards developers and other tech-savvy power u
 located at the root of the user home, i.e. `~/taketok` (UNIX-like) or `%USERHOME%/taketok` (Windows). You will have to
 create  this directory yourself, as part of the setup process.
 
-### Step 1: Install the prerequisites
+### Install the prerequisites
 * **Python 3.10** - e.g. `brew install python@3.10` (macOS)
 * **ffmpeg** - `brew install ffmpeg` (MacOS) | `choco install ffmpeg` (Win) | `sudo apt install ffmpeg` (Debian)
+* **Rust** - `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
 
-### Step 2: Set up the Python environment (and some other useful stuff...)
+### Set up the Python environment (and some other useful stuff...)
 Simply run `./setup.sh`
 
 ### Step 3: Create the configuration file
@@ -26,13 +27,11 @@ file is `~/taketok/config/default.config.json`.
 Create the default config file `~/taketok/config/default.config.json` as follows, for now:
 ```json
 {
-  "videoOutputDir": "/Users/me/path/to/where_i_want_my_videos",
   "whisperModel": "small"
 }
 ```
 
 **Here's what these fields mean:**
-* `videoOutputDir`: Where `taketok` puts all downloaded videos
 * `whisperModel`: The whisper transcription model to be used (`tiny` | `base` | `small` | `medium` | `large`)
 
 ## Usage Instructions
@@ -60,15 +59,22 @@ To launch the API backend, run the following command from the `src_python` direc
 
 `python -m flask --app taketok_api run`
 
-### Importing videos
+### Launching the UI and importing videos
 * ✅ You have completed the setup instructions, including creating the config file?
 * ✅ You have imported some source links for your config of choice (e.g. `default`)?
 * ✅ The REST API backend is running?
 
-Great, you can now start importing videos! From the `src_python` directory, simply run
+Great, you can now start importing videos!
 
-* `python taketok.py` to launch `taketok` with the default config (`default.config.json`), or
-* `python taketok.py myOtherConfig` to launch `taketok` with a custom config called `myOtherConfig.config.json`
+To launch the UI, either use the `tauri dev` IntelliJ run config (or `tauri dev + reset` if you also want to reset
+the database) or run `npm run tauri dev` from the command line.
+
+### Some considerations
+Currently, a lot of things are subject to change. So here are a few things to keep in mind:
+* You may need to create file structure yourself, especially the DB file `taketok/data/default.sqlite`
+* The mechanism for importing source links is subject to change and may break soon
+* In `main.rs`, you can choose to either use the mock core API client or the real client. The mock client requires
+  some external files that aren't currently checked in.
 
 ## Dev notes (this probably isn't particularly relevant to you...)
 * pip setup instructions for whisper didn't work, pip install command had to be `pip install git+https://github.com/openai/whisper.git`

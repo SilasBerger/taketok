@@ -35,16 +35,16 @@ impl CoreApiClient {
         }
     }
 
-    pub async fn import_from_source_url(&self, source_url: &str, video_output_dir: &str) -> Result<ImportResponse, TakeTokError> {
+    pub async fn import_from_source_url(&self, source_url: &str, config_name: &str) -> Result<ImportResponse, TakeTokError> {
         match &self.op_mode {
-            Live(client) => client.import_from_source_url(source_url, video_output_dir).await,
+            Live(client) => client.import_from_source_url(source_url, config_name).await,
             Mock(client) => client.get_fake_video_metadata(source_url),
         }
     }
 
-    pub async fn request_transcript(&self, video_id: &str, video_output_dir: &str, whisper_model: &str) -> Result<String, TakeTokError> {
+    pub async fn request_transcript(&self, video_id: &str, config_name: &str, whisper_model: &str) -> Result<String, TakeTokError> {
         match &self.op_mode {
-            Live(client) => client.request_transcript(video_id, video_output_dir, whisper_model).await,
+            Live(client) => client.request_transcript(video_id, config_name, whisper_model).await,
             Mock(client) => client.get_fake_transcript(video_id),
         }
     }
@@ -54,12 +54,12 @@ struct CoreApiClientImpl {
 }
 
 impl CoreApiClientImpl {
-    pub async fn import_from_source_url(&self, source_url: &str, video_output_dir: &str) -> Result<ImportResponse, TakeTokError> {
+    pub async fn import_from_source_url(&self, source_url: &str, config_name: &str) -> Result<ImportResponse, TakeTokError> {
         let client = reqwest::Client::new();
 
         let request_body = ImportRequest {
             source_url: source_url.to_string(),
-            video_output_dir: video_output_dir.to_string(),
+            config_name: config_name.to_string(),
         };
 
         println!("{:?}", request_body);
@@ -74,12 +74,12 @@ impl CoreApiClientImpl {
         Ok(result.json().await?)
     }
 
-    pub async fn request_transcript(&self, video_id: &str, video_output_dir: &str, whisper_model: &str) -> Result<String, TakeTokError> {
+    pub async fn request_transcript(&self, video_id: &str, config_name: &str, whisper_model: &str) -> Result<String, TakeTokError> {
         let client = reqwest::Client::new();
 
         let request_body = TranscriptRequest {
             video_id: video_id.to_string(),
-            video_output_dir: video_output_dir.to_string(),
+            config_name: config_name.to_string(),
             whisper_model: whisper_model.to_string(),
         };
 
