@@ -70,10 +70,11 @@ To launch the UI, either use the `tauri dev` IntelliJ run config (or `tauri dev 
 the database) or run `npm run tauri dev` from the command line.
 
 ### Some considerations
-* May need to create file structure, DB files
-* Import source links is subject to change
-* main.rs may either use mock (in which case you need to have the mock data which you don't), or use the real thing
-* Configs are
+Currently, a lot of things are subject to change. So here are a few things to keep in mind:
+* You may need to create file structure yourself, especially the DB file `taketok/data/default.sqlite`
+* The mechanism for importing source links is subject to change and may break soon
+* In `main.rs`, you can choose to either use the mock core API client or the real client. The mock client requires
+  some external files that aren't currently checked in.
 
 ## Dev notes (this probably isn't particularly relevant to you...)
 * pip setup instructions for whisper didn't work, pip install command had to be `pip install git+https://github.com/openai/whisper.git`
