@@ -1,6 +1,5 @@
 use diesel::{ExpressionMethods, insert_into, insert_or_ignore_into, OptionalExtension, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection, update};
 use crate::db::db_models::{AuthorInfo, Hashtag, Video};
-use crate::db::schema;
 use crate::db::schema::source_url::dsl::source_url;
 use crate::error::TakeTokError;
 use crate::models::{ImportResponseAuthor, ImportResponseChallenge, ImportResponseVideo, VideoFullInfo};
@@ -10,7 +9,7 @@ pub fn insert_author_if_not_exists(conn: &mut SqliteConnection, author_id: &str)
     use crate::db::schema::author::id;
 
     insert_or_ignore_into(author)
-        .values((id.eq(author_id)))
+        .values(id.eq(author_id))
         .execute(conn)?;
     Ok(())
 }

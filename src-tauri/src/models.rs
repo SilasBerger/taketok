@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::db::db_models::{AuthorInfo, Challenge, Hashtag, Video};
+use crate::db::db_models::{AuthorInfo, Video};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranscriptRequest {

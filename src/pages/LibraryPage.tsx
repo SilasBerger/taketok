@@ -1,6 +1,6 @@
 import {Accessor, createSignal, For, onMount, Show} from "solid-js";
 import {VideoFullInfo} from "../shared/models";
-import VideoOverlay from "../components/PageCarousel/VideoOverlay";
+import VideoOverlay from "../components/VideoOverlay/VideoOverlay";
 import VideoCard from "../components/VideoCard/VideoCard";
 
 function LibraryPage({videoData, loadVideoData}: {videoData: Accessor<[VideoFullInfo]>, loadVideoData: () => Promise<void>}) {
